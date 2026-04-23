@@ -9562,6 +9562,120 @@
       ]
     },
     {
+      "name": "LoadFontShaper",
+      "description": "Load a FontShaper from a TTF/OTF file at the given base pixel size",
+      "returnType": "FontShaper *",
+      "params": [
+        {
+          "type": "const char *",
+          "name": "fileName"
+        },
+        {
+          "type": "int",
+          "name": "fontSize"
+        }
+      ]
+    },
+    {
+      "name": "LoadFontShaperFromMemory",
+      "description": "Load a FontShaper from font data in memory",
+      "returnType": "FontShaper *",
+      "params": [
+        {
+          "type": "const char *",
+          "name": "fileType"
+        },
+        {
+          "type": "const unsigned char *",
+          "name": "fileData"
+        },
+        {
+          "type": "int",
+          "name": "dataSize"
+        },
+        {
+          "type": "int",
+          "name": "fontSize"
+        }
+      ]
+    },
+    {
+      "name": "IsFontShaperValid",
+      "description": "Check if a FontShaper is valid (data loaded)",
+      "returnType": "bool",
+      "params": [
+        {
+          "type": "const FontShaper *",
+          "name": "shaper"
+        }
+      ]
+    },
+    {
+      "name": "UnloadFontShaper",
+      "description": "Unload FontShaper from memory and GPU",
+      "returnType": "void",
+      "params": [
+        {
+          "type": "FontShaper *",
+          "name": "shaper"
+        }
+      ]
+    },
+    {
+      "name": "DrawTextShaped",
+      "description": "Draw shaped text (uses HarfBuzz for shaping: joining, RTL, ligatures)",
+      "returnType": "void",
+      "params": [
+        {
+          "type": "FontShaper *",
+          "name": "shaper"
+        },
+        {
+          "type": "const char *",
+          "name": "text"
+        },
+        {
+          "type": "Vector2",
+          "name": "position"
+        },
+        {
+          "type": "float",
+          "name": "fontSize"
+        },
+        {
+          "type": "float",
+          "name": "spacing"
+        },
+        {
+          "type": "Color",
+          "name": "tint"
+        }
+      ]
+    },
+    {
+      "name": "MeasureTextShaped",
+      "description": "Measure shaped text size",
+      "returnType": "Vector2",
+      "params": [
+        {
+          "type": "FontShaper *",
+          "name": "shaper"
+        },
+        {
+          "type": "const char *",
+          "name": "text"
+        },
+        {
+          "type": "float",
+          "name": "fontSize"
+        },
+        {
+          "type": "float",
+          "name": "spacing"
+        }
+      ]
+    },
+    {
       "name": "SetTextLineSpacing",
       "description": "Set vertical line spacing when drawing with line-breaks",
       "returnType": "void",
