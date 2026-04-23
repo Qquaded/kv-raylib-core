@@ -3050,6 +3050,11 @@ struct FontShaper {
     int baseSize;               // Base pixel size the face was configured at
     int ascent;                 // Baseline offset (pixels) from top, at baseSize
 
+    // Owned copy of the font file bytes; FT_New_Memory_Face keeps a pointer to
+    // these for the face's lifetime, so we can't let the caller's buffer go away.
+    unsigned char *fontData;
+    int fontDataSize;
+
     // Linear glyph cache. Simple array indexed by hash of glyphIndex with open addressing.
     // Dynamically grown. Reasonable for a few thousand unique glyphs per shaper.
     ShaperGlyph *cache;
@@ -3140,17 +3145,25 @@ static ShaperGlyph *ShaperCacheGet(FontShaper *shaper, unsigned int glyphIndex)
 
     if ((slot->width > 0) && (slot->height > 0) && (bmp->buffer != NULL))
     {
-        // Copy pitch-aware into a contiguous grayscale buffer then upload
-        unsigned char *pixels = (unsigned char *)RL_MALLOC((size_t)slot->width*(size_t)slot->height);
+        // FreeType gives us a single-channel alpha bitmap. raylib's default shader treats
+        // the grayscale value as intensity with alpha = 1, which produces solid rectangles
+        // when tinted. Expand to GRAY_ALPHA (two bytes per pixel: .r = 255 white,
+        // .a = FreeType intensity) so tint color modulates and anti-aliasing is correct.
+        size_t pixCount = (size_t)slot->width*(size_t)slot->height;
+        unsigned char *pixels = (unsigned char *)RL_MALLOC(pixCount*2);
         int pitch = bmp->pitch;
         const unsigned char *src = bmp->buffer;
         if (pitch < 0) src += (size_t)(slot->height - 1)*(size_t)(-pitch);
 
         for (int row = 0; row < slot->height; row++)
         {
-            memcpy(pixels + (size_t)row*(size_t)slot->width,
-                   src + (size_t)row*(size_t)pitch,
-                   (size_t)slot->width);
+            const unsigned char *srcRow = src + (size_t)row*(size_t)pitch;
+            unsigned char *dstRow = pixels + (size_t)row*(size_t)slot->width*2;
+            for (int col = 0; col < slot->width; col++)
+            {
+                dstRow[col*2 + 0] = 255;
+                dstRow[col*2 + 1] = srcRow[col];
+            }
         }
 
         Image img = {
@@ -3158,7 +3171,7 @@ static ShaperGlyph *ShaperCacheGet(FontShaper *shaper, unsigned int glyphIndex)
             .width = slot->width,
             .height = slot->height,
             .mipmaps = 1,
-            .format = PIXELFORMAT_UNCOMPRESSED_GRAYSCALE
+            .format = PIXELFORMAT_UNCOMPRESSED_GRAY_ALPHA
         };
         slot->texture = LoadTextureFromImage(img);
         slot->rendered = (slot->texture.id != 0);
@@ -3179,8 +3192,18 @@ FontShaper *LoadFontShaperFromMemory(const char *fileType, const unsigned char *
     FontShaper *shaper = (FontShaper *)RL_CALLOC(1, sizeof(FontShaper));
     shaper->baseSize = fontSize;
 
+    // FT_New_Memory_Face does not copy the buffer, so we own one.
+    shaper->fontData = (unsigned char *)RL_MALLOC(dataSize);
+    if (shaper->fontData == NULL)
+    {
+        RL_FREE(shaper);
+        return NULL;
+    }
+    memcpy(shaper->fontData, fileData, (size_t)dataSize);
+    shaper->fontDataSize = dataSize;
+
     FT_Error err = FT_Init_FreeType(&shaper->ftLibrary);
-    if (err == 0) err = FT_New_Memory_Face(shaper->ftLibrary, (const FT_Byte *)fileData, (FT_Long)dataSize, 0, &shaper->ftFace);
+    if (err == 0) err = FT_New_Memory_Face(shaper->ftLibrary, (const FT_Byte *)shaper->fontData, (FT_Long)shaper->fontDataSize, 0, &shaper->ftFace);
     if (err == 0) err = FT_Set_Pixel_Sizes(shaper->ftFace, 0, (FT_UInt)fontSize);
 
     if (err != 0)
@@ -3188,6 +3211,7 @@ FontShaper *LoadFontShaperFromMemory(const char *fileType, const unsigned char *
         TRACELOG(LOG_WARNING, "FONT: Failed to load FontShaper (FreeType error: 0x%02X)", err);
         if (shaper->ftFace != NULL) FT_Done_Face(shaper->ftFace);
         if (shaper->ftLibrary != NULL) FT_Done_FreeType(shaper->ftLibrary);
+        RL_FREE(shaper->fontData);
         RL_FREE(shaper);
         return NULL;
     }
@@ -3245,6 +3269,7 @@ void UnloadFontShaper(FontShaper *shaper)
     if (shaper->hbFont != NULL) hb_font_destroy(shaper->hbFont);
     if (shaper->ftFace != NULL) FT_Done_Face(shaper->ftFace);
     if (shaper->ftLibrary != NULL) FT_Done_FreeType(shaper->ftLibrary);
+    if (shaper->fontData != NULL) RL_FREE(shaper->fontData);
 
     RL_FREE(shaper);
 }
