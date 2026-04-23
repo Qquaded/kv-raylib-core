@@ -3025,4 +3025,327 @@ static GlyphInfo *LoadFontDataBDF(const unsigned char *fileData, int dataSize, c
 }
 #endif      // SUPPORT_FILEFORMAT_BDF
 
+//----------------------------------------------------------------------------------
+// Shaped text (HarfBuzz-backed) API implementation
+//----------------------------------------------------------------------------------
+#if SUPPORT_FILEFORMAT_TTF
+
+// Cached glyph entry (rasterized + uploaded on demand, keyed by FreeType glyph index)
+typedef struct ShaperGlyph {
+    unsigned int glyphIndex;    // FreeType glyph index (key)
+    bool valid;                 // True if slot is in use
+    bool rendered;              // True if glyph has pixel data (false for space and empty glyphs)
+    Texture2D texture;          // GPU texture for this glyph (width==rows==0 if not rendered)
+    int width;
+    int height;
+    int bitmapLeft;             // FT bitmap_left (x offset from pen to bitmap's left edge)
+    int bitmapTop;              // FT bitmap_top (y offset from baseline to bitmap's top edge)
+} ShaperGlyph;
+
+struct FontShaper {
+    FT_Library ftLibrary;
+    FT_Face ftFace;
+    hb_font_t *hbFont;
+    hb_buffer_t *hbBuffer;
+    int baseSize;               // Base pixel size the face was configured at
+    int ascent;                 // Baseline offset (pixels) from top, at baseSize
+
+    // Linear glyph cache. Simple array indexed by hash of glyphIndex with open addressing.
+    // Dynamically grown. Reasonable for a few thousand unique glyphs per shaper.
+    ShaperGlyph *cache;
+    int cacheCapacity;
+    int cacheCount;
+};
+
+// Open-addressing hash: find slot for glyphIndex (returns existing or empty slot)
+static ShaperGlyph *ShaperCacheFindSlot(FontShaper *shaper, unsigned int glyphIndex)
+{
+    if ((shaper == NULL) || (shaper->cache == NULL) || (shaper->cacheCapacity == 0)) return NULL;
+    unsigned int mask = (unsigned int)(shaper->cacheCapacity - 1);
+    unsigned int h = glyphIndex*2654435761u;
+    for (unsigned int i = 0; i < (unsigned int)shaper->cacheCapacity; i++)
+    {
+        unsigned int idx = (h + i) & mask;
+        ShaperGlyph *slot = &shaper->cache[idx];
+        if (!slot->valid || (slot->glyphIndex == glyphIndex)) return slot;
+    }
+    return NULL;
+}
+
+static void ShaperCacheGrow(FontShaper *shaper)
+{
+    int oldCap = shaper->cacheCapacity;
+    ShaperGlyph *oldCache = shaper->cache;
+    int newCap = (oldCap == 0)? 128 : oldCap*2;
+
+    shaper->cache = (ShaperGlyph *)RL_CALLOC(newCap, sizeof(ShaperGlyph));
+    shaper->cacheCapacity = newCap;
+    shaper->cacheCount = 0;
+
+    if (oldCache != NULL)
+    {
+        for (int i = 0; i < oldCap; i++)
+        {
+            if (oldCache[i].valid)
+            {
+                ShaperGlyph *slot = ShaperCacheFindSlot(shaper, oldCache[i].glyphIndex);
+                if (slot != NULL)
+                {
+                    *slot = oldCache[i];
+                    shaper->cacheCount++;
+                }
+            }
+        }
+        RL_FREE(oldCache);
+    }
+}
+
+// Ensure a glyph is rasterized and uploaded; returns cache entry or NULL on failure
+static ShaperGlyph *ShaperCacheGet(FontShaper *shaper, unsigned int glyphIndex)
+{
+    if (shaper == NULL) return NULL;
+
+    // Grow when load factor passes ~0.7 to keep probe chains short
+    if ((shaper->cacheCapacity == 0) || (shaper->cacheCount*10 >= shaper->cacheCapacity*7))
+    {
+        ShaperCacheGrow(shaper);
+    }
+
+    ShaperGlyph *slot = ShaperCacheFindSlot(shaper, glyphIndex);
+    if (slot == NULL) return NULL;
+    if (slot->valid) return slot;
+
+    // Rasterize glyph with FreeType
+    FT_Error err = FT_Load_Glyph(shaper->ftFace, (FT_UInt)glyphIndex, FT_LOAD_RENDER);
+    if (err != 0)
+    {
+        // Still mark as cached so we don't keep retrying
+        slot->glyphIndex = glyphIndex;
+        slot->valid = true;
+        slot->rendered = false;
+        shaper->cacheCount++;
+        return slot;
+    }
+
+    FT_GlyphSlot ftSlot = shaper->ftFace->glyph;
+    FT_Bitmap *bmp = &ftSlot->bitmap;
+
+    slot->glyphIndex = glyphIndex;
+    slot->valid = true;
+    slot->bitmapLeft = ftSlot->bitmap_left;
+    slot->bitmapTop = ftSlot->bitmap_top;
+    slot->width = (int)bmp->width;
+    slot->height = (int)bmp->rows;
+    slot->rendered = false;
+
+    if ((slot->width > 0) && (slot->height > 0) && (bmp->buffer != NULL))
+    {
+        // Copy pitch-aware into a contiguous grayscale buffer then upload
+        unsigned char *pixels = (unsigned char *)RL_MALLOC((size_t)slot->width*(size_t)slot->height);
+        int pitch = bmp->pitch;
+        const unsigned char *src = bmp->buffer;
+        if (pitch < 0) src += (size_t)(slot->height - 1)*(size_t)(-pitch);
+
+        for (int row = 0; row < slot->height; row++)
+        {
+            memcpy(pixels + (size_t)row*(size_t)slot->width,
+                   src + (size_t)row*(size_t)pitch,
+                   (size_t)slot->width);
+        }
+
+        Image img = {
+            .data = pixels,
+            .width = slot->width,
+            .height = slot->height,
+            .mipmaps = 1,
+            .format = PIXELFORMAT_UNCOMPRESSED_GRAYSCALE
+        };
+        slot->texture = LoadTextureFromImage(img);
+        slot->rendered = (slot->texture.id != 0);
+
+        UnloadImage(img); // frees pixels
+    }
+
+    shaper->cacheCount++;
+    return slot;
+}
+
+// Load a FontShaper from font data in memory (file type is ignored; FreeType autodetects)
+FontShaper *LoadFontShaperFromMemory(const char *fileType, const unsigned char *fileData, int dataSize, int fontSize)
+{
+    (void)fileType;
+    if ((fileData == NULL) || (dataSize <= 0) || (fontSize <= 0)) return NULL;
+
+    FontShaper *shaper = (FontShaper *)RL_CALLOC(1, sizeof(FontShaper));
+    shaper->baseSize = fontSize;
+
+    FT_Error err = FT_Init_FreeType(&shaper->ftLibrary);
+    if (err == 0) err = FT_New_Memory_Face(shaper->ftLibrary, (const FT_Byte *)fileData, (FT_Long)dataSize, 0, &shaper->ftFace);
+    if (err == 0) err = FT_Set_Pixel_Sizes(shaper->ftFace, 0, (FT_UInt)fontSize);
+
+    if (err != 0)
+    {
+        TRACELOG(LOG_WARNING, "FONT: Failed to load FontShaper (FreeType error: 0x%02X)", err);
+        if (shaper->ftFace != NULL) FT_Done_Face(shaper->ftFace);
+        if (shaper->ftLibrary != NULL) FT_Done_FreeType(shaper->ftLibrary);
+        RL_FREE(shaper);
+        return NULL;
+    }
+
+    shaper->ascent = (int)(shaper->ftFace->size->metrics.ascender >> 6);
+    shaper->hbFont = hb_ft_font_create_referenced(shaper->ftFace);
+    shaper->hbBuffer = hb_buffer_create();
+
+    ShaperCacheGrow(shaper); // Allocate initial cache
+    TRACELOG(LOG_INFO, "FONT: FontShaper loaded successfully (base size: %i)", fontSize);
+    return shaper;
+}
+
+// Load a FontShaper from a file path
+FontShaper *LoadFontShaper(const char *fileName, int fontSize)
+{
+    if (fileName == NULL) return NULL;
+
+    int dataSize = 0;
+    unsigned char *fileData = LoadFileData(fileName, &dataSize);
+    if (fileData == NULL)
+    {
+        TRACELOG(LOG_WARNING, "FONT: [%s] Failed to load font data for shaper", fileName);
+        return NULL;
+    }
+
+    const char *ext = GetFileExtension(fileName);
+    FontShaper *shaper = LoadFontShaperFromMemory(ext, fileData, dataSize, fontSize);
+    UnloadFileData(fileData);
+    return shaper;
+}
+
+bool IsFontShaperValid(const FontShaper *shaper)
+{
+    return ((shaper != NULL) && (shaper->ftFace != NULL) && (shaper->hbFont != NULL) && (shaper->hbBuffer != NULL));
+}
+
+void UnloadFontShaper(FontShaper *shaper)
+{
+    if (shaper == NULL) return;
+
+    if (shaper->cache != NULL)
+    {
+        for (int i = 0; i < shaper->cacheCapacity; i++)
+        {
+            if (shaper->cache[i].valid && shaper->cache[i].rendered)
+            {
+                UnloadTexture(shaper->cache[i].texture);
+            }
+        }
+        RL_FREE(shaper->cache);
+    }
+
+    if (shaper->hbBuffer != NULL) hb_buffer_destroy(shaper->hbBuffer);
+    if (shaper->hbFont != NULL) hb_font_destroy(shaper->hbFont);
+    if (shaper->ftFace != NULL) FT_Done_Face(shaper->ftFace);
+    if (shaper->ftLibrary != NULL) FT_Done_FreeType(shaper->ftLibrary);
+
+    RL_FREE(shaper);
+}
+
+// Shape text with HarfBuzz; returns (glyph infos, glyph positions) via the shaper's buffer
+static void ShapeText(FontShaper *shaper, const char *text,
+                      hb_glyph_info_t **outInfo, hb_glyph_position_t **outPos,
+                      unsigned int *outCount, hb_direction_t *outDir)
+{
+    hb_buffer_reset(shaper->hbBuffer);
+    hb_buffer_add_utf8(shaper->hbBuffer, text, -1, 0, -1);
+    hb_buffer_guess_segment_properties(shaper->hbBuffer);
+    hb_shape(shaper->hbFont, shaper->hbBuffer, NULL, 0);
+
+    unsigned int count = 0;
+    *outInfo = hb_buffer_get_glyph_infos(shaper->hbBuffer, &count);
+    *outPos = hb_buffer_get_glyph_positions(shaper->hbBuffer, &count);
+    *outCount = count;
+    *outDir = hb_buffer_get_direction(shaper->hbBuffer);
+}
+
+void DrawTextShaped(FontShaper *shaper, const char *text, Vector2 position, float fontSize, float spacing, Color tint)
+{
+    if (!IsFontShaperValid(shaper) || (text == NULL) || (text[0] == '\0')) return;
+    if (fontSize <= 0.0f) fontSize = (float)shaper->baseSize;
+
+    hb_glyph_info_t *info = NULL;
+    hb_glyph_position_t *pos = NULL;
+    unsigned int count = 0;
+    hb_direction_t dir = HB_DIRECTION_LTR;
+    ShapeText(shaper, text, &info, &pos, &count, &dir);
+
+    float scale = fontSize/(float)shaper->baseSize;
+    float baseline = position.y + (float)shaper->ascent*scale;
+    float penX = position.x;
+
+    // HarfBuzz outputs glyphs in visual order regardless of input direction,
+    // so a simple left-to-right draw loop produces correct RTL output too.
+    for (unsigned int i = 0; i < count; i++)
+    {
+        ShaperGlyph *g = ShaperCacheGet(shaper, info[i].codepoint);
+        if ((g != NULL) && g->rendered)
+        {
+            float xOff = ((float)pos[i].x_offset/64.0f)*scale;
+            float yOff = ((float)pos[i].y_offset/64.0f)*scale;
+            Rectangle src = { 0.0f, 0.0f, (float)g->width, (float)g->height };
+            Rectangle dst = {
+                penX + ((float)g->bitmapLeft + xOff)*scale,
+                baseline - ((float)g->bitmapTop + yOff)*scale,
+                (float)g->width*scale,
+                (float)g->height*scale
+            };
+            DrawTexturePro(g->texture, src, dst, (Vector2){ 0.0f, 0.0f }, 0.0f, tint);
+        }
+
+        penX += ((float)pos[i].x_advance/64.0f)*scale + spacing;
+    }
+}
+
+Vector2 MeasureTextShaped(FontShaper *shaper, const char *text, float fontSize, float spacing)
+{
+    Vector2 size = { 0.0f, 0.0f };
+    if (!IsFontShaperValid(shaper) || (text == NULL) || (text[0] == '\0')) return size;
+    if (fontSize <= 0.0f) fontSize = (float)shaper->baseSize;
+
+    hb_glyph_info_t *info = NULL;
+    hb_glyph_position_t *pos = NULL;
+    unsigned int count = 0;
+    hb_direction_t dir = HB_DIRECTION_LTR;
+    ShapeText(shaper, text, &info, &pos, &count, &dir);
+
+    float scale = fontSize/(float)shaper->baseSize;
+    float width = 0.0f;
+    for (unsigned int i = 0; i < count; i++)
+    {
+        width += ((float)pos[i].x_advance/64.0f)*scale;
+        if (i + 1 < count) width += spacing;
+    }
+
+    // Height estimation: face's line height (height metric) scaled
+    float lineHeight = (float)(shaper->ftFace->size->metrics.height >> 6)*scale;
+    if (lineHeight <= 0.0f) lineHeight = fontSize;
+
+    size.x = width;
+    size.y = lineHeight;
+    return size;
+}
+
+#else // SUPPORT_FILEFORMAT_TTF
+
+// Stubs when TTF support is disabled
+FontShaper *LoadFontShaper(const char *fileName, int fontSize) { (void)fileName; (void)fontSize; return NULL; }
+FontShaper *LoadFontShaperFromMemory(const char *fileType, const unsigned char *fileData, int dataSize, int fontSize)
+{ (void)fileType; (void)fileData; (void)dataSize; (void)fontSize; return NULL; }
+bool IsFontShaperValid(const FontShaper *shaper) { (void)shaper; return false; }
+void UnloadFontShaper(FontShaper *shaper) { (void)shaper; }
+void DrawTextShaped(FontShaper *shaper, const char *text, Vector2 position, float fontSize, float spacing, Color tint)
+{ (void)shaper; (void)text; (void)position; (void)fontSize; (void)spacing; (void)tint; }
+Vector2 MeasureTextShaped(FontShaper *shaper, const char *text, float fontSize, float spacing)
+{ (void)shaper; (void)text; (void)fontSize; (void)spacing; Vector2 v = { 0.0f, 0.0f }; return v; }
+
+#endif // SUPPORT_FILEFORMAT_TTF
+
 #endif      // SUPPORT_MODULE_RTEXT
