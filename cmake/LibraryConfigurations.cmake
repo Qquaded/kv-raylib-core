@@ -226,15 +226,106 @@ if (${PLATFORM} MATCHES "Desktop")
     set(LIBS_PRIVATE ${LIBS_PRIVATE} glfw)
 endif ()
 
-# Font rendering (TTF/OTF) requires FreeType for rasterization and HarfBuzz for shaping
-if (SUPPORT_FILEFORMAT_TTF)
-    find_package(Freetype REQUIRED)
-    include_directories(${FREETYPE_INCLUDE_DIRS})
-    set(LIBS_PRIVATE ${LIBS_PRIVATE} ${FREETYPE_LIBRARIES})
-    set(RAYLIB_DEPENDENCIES "${RAYLIB_DEPENDENCIES}\nfind_dependency(Freetype)")
+# Font rendering (TTF/OTF) requires FreeType for rasterization and HarfBuzz for shaping.
+# On Linux/macOS these are normally installed via the system package manager; on Windows
+# they're not, so we fall back to FetchContent to build them from source automatically.
+# Users can force FetchContent with -DRAYLIB_FETCH_FONT_DEPS=ON.
+option(RAYLIB_FETCH_FONT_DEPS "Always build FreeType and HarfBuzz from source via FetchContent" OFF)
 
-    find_package(PkgConfig REQUIRED)
-    pkg_check_modules(HARFBUZZ REQUIRED IMPORTED_TARGET harfbuzz)
-    include_directories(${HARFBUZZ_INCLUDE_DIRS})
-    set(LIBS_PRIVATE ${LIBS_PRIVATE} PkgConfig::HARFBUZZ)
+if (SUPPORT_FILEFORMAT_TTF)
+    set(_raylib_fetch_freetype ${RAYLIB_FETCH_FONT_DEPS})
+    set(_raylib_fetch_harfbuzz ${RAYLIB_FETCH_FONT_DEPS})
+
+    # --- FreeType: prefer system install, fall back to FetchContent ---
+    if (NOT _raylib_fetch_freetype)
+        find_package(Freetype QUIET)
+        if (NOT Freetype_FOUND)
+            message(STATUS "raylib: Freetype not found via find_package, will build from source via FetchContent")
+            set(_raylib_fetch_freetype TRUE)
+        endif ()
+    endif ()
+
+    # --- HarfBuzz: try pkg-config, then CMake config (vcpkg), then FetchContent ---
+    if (NOT _raylib_fetch_harfbuzz)
+        set(HARFBUZZ_FOUND FALSE)
+        find_package(PkgConfig QUIET)
+        if (PkgConfig_FOUND)
+            pkg_check_modules(HARFBUZZ QUIET IMPORTED_TARGET harfbuzz)
+        endif ()
+        if (NOT HARFBUZZ_FOUND)
+            find_package(harfbuzz QUIET CONFIG)
+            if (TARGET harfbuzz::harfbuzz)
+                set(HARFBUZZ_FOUND TRUE)
+            endif ()
+        endif ()
+        if (NOT HARFBUZZ_FOUND)
+            message(STATUS "raylib: HarfBuzz not found via pkg-config or find_package, will build from source via FetchContent")
+            set(_raylib_fetch_harfbuzz TRUE)
+        endif ()
+    endif ()
+
+    if (_raylib_fetch_freetype OR _raylib_fetch_harfbuzz)
+        include(FetchContent)
+    endif ()
+
+    # FreeType from source: minimal config, no external image codecs or compression libs
+    if (_raylib_fetch_freetype)
+        set(FT_DISABLE_ZLIB ON CACHE BOOL "" FORCE)
+        set(FT_DISABLE_BZIP2 ON CACHE BOOL "" FORCE)
+        set(FT_DISABLE_PNG ON CACHE BOOL "" FORCE)
+        set(FT_DISABLE_HARFBUZZ ON CACHE BOOL "" FORCE)  # Avoid circular dep (FT optional auto-hinting)
+        set(FT_DISABLE_BROTLI ON CACHE BOOL "" FORCE)
+        FetchContent_Declare(freetype
+            GIT_REPOSITORY https://gitlab.freedesktop.org/freetype/freetype.git
+            GIT_TAG VER-2-13-3
+            GIT_SHALLOW TRUE)
+        FetchContent_MakeAvailable(freetype)
+        if (NOT TARGET Freetype::Freetype)
+            add_library(Freetype::Freetype ALIAS freetype)
+        endif ()
+    endif ()
+
+    # HarfBuzz from source: only what we need (no ICU/Graphite/GLib/GObject)
+    if (_raylib_fetch_harfbuzz)
+        set(HB_HAVE_FREETYPE ON CACHE BOOL "" FORCE)
+        set(HB_BUILD_SUBSET OFF CACHE BOOL "" FORCE)
+        set(HB_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+        set(HB_BUILD_UTILS OFF CACHE BOOL "" FORCE)
+        set(HB_HAVE_ICU OFF CACHE BOOL "" FORCE)
+        set(HB_HAVE_GRAPHITE2 OFF CACHE BOOL "" FORCE)
+        set(HB_HAVE_GLIB OFF CACHE BOOL "" FORCE)
+        set(HB_HAVE_GOBJECT OFF CACHE BOOL "" FORCE)
+        set(HB_HAVE_CORETEXT OFF CACHE BOOL "" FORCE)
+        set(HB_HAVE_GDI OFF CACHE BOOL "" FORCE)
+        set(HB_HAVE_UNISCRIBE OFF CACHE BOOL "" FORCE)
+        set(HB_HAVE_DIRECTWRITE OFF CACHE BOOL "" FORCE)
+        FetchContent_Declare(harfbuzz
+            GIT_REPOSITORY https://github.com/harfbuzz/harfbuzz.git
+            GIT_TAG 10.4.0
+            GIT_SHALLOW TRUE)
+        FetchContent_MakeAvailable(harfbuzz)
+    endif ()
+
+    # Link FreeType (via imported target if present, otherwise classic vars)
+    if (TARGET Freetype::Freetype)
+        set(LIBS_PRIVATE ${LIBS_PRIVATE} Freetype::Freetype)
+    else ()
+        include_directories(${FREETYPE_INCLUDE_DIRS})
+        set(LIBS_PRIVATE ${LIBS_PRIVATE} ${FREETYPE_LIBRARIES})
+    endif ()
+
+    # Link HarfBuzz (config package, pkg-config, or in-tree FetchContent target)
+    if (TARGET harfbuzz::harfbuzz)
+        set(LIBS_PRIVATE ${LIBS_PRIVATE} harfbuzz::harfbuzz)
+    elseif (TARGET PkgConfig::HARFBUZZ)
+        set(LIBS_PRIVATE ${LIBS_PRIVATE} PkgConfig::HARFBUZZ)
+    elseif (TARGET harfbuzz)
+        set(LIBS_PRIVATE ${LIBS_PRIVATE} harfbuzz)
+    endif ()
+
+    # Only surface a find_dependency() call in raylib-config.cmake when FreeType came from
+    # the system; when built in-tree there's nothing for downstream to find.
+    if (NOT _raylib_fetch_freetype)
+        set(RAYLIB_DEPENDENCIES "${RAYLIB_DEPENDENCIES}\nfind_dependency(Freetype)")
+    endif ()
 endif ()
