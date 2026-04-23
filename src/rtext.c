@@ -24,7 +24,8 @@
 *           drawing text and shapes with a single draw call [SetShapesTexture()]
 *
 *   DEPENDENCIES:
-*       stb_truetype  - Load TTF file and rasterize characters data
+*       FreeType      - Load TTF/OTF file and rasterize characters data (normal and SDF)
+*       HarfBuzz      - Text shaping engine, used to map codepoints to glyph indices and advances
 *       stb_rect_pack - Rectangles packing algorithms, required for font atlas generation
 *
 *
@@ -80,21 +81,12 @@
 #endif
 
 #if SUPPORT_FILEFORMAT_TTF
-    #if defined(__GNUC__) // GCC and Clang
-        #pragma GCC diagnostic push
-        #pragma GCC diagnostic ignored "-Wunused-function"
-    #endif
+    #include <ft2build.h>
+    #include FT_FREETYPE_H
+    #include FT_MODULE_H                    // Required for: FT_Property_Set() (SDF spread config)
 
-    #define STBTT_malloc(x,u) ((void)(u),RL_MALLOC(x))
-    #define STBTT_free(x,u) ((void)(u),RL_FREE(x))
-
-    #define STBTT_STATIC
-    #define STB_TRUETYPE_IMPLEMENTATION
-    #include "external/stb_truetype.h"      // Required for: ttf font data reading
-
-    #if defined(__GNUC__) // GCC and Clang
-        #pragma GCC diagnostic pop
-    #endif
+    #include <hb.h>                         // HarfBuzz main header
+    #include <hb-ft.h>                      // HarfBuzz FreeType interop
 #endif
 
 //----------------------------------------------------------------------------------
@@ -625,24 +617,38 @@ GlyphInfo *LoadFontData(const unsigned char *fileData, int dataSize, int fontSiz
 #if SUPPORT_FILEFORMAT_TTF
     // Load font data (including pixel data) from TTF memory file
     // NOTE: Loaded information should be enough to generate font image atlas, using any packaging method
+    // NOTE: Font rasterization is done with FreeType, glyph index/advance lookup is done with HarfBuzz
     if (fileData != NULL)
     {
         bool genFontChars = false;
-        stbtt_fontinfo fontInfo = { 0 };
         // TODO: Should a shallow copy be created to avoid "dealing" with a const user array?
         int *requiredCodepoints = (int *)codepoints;
 
-        if (stbtt_InitFont(&fontInfo, (unsigned char *)fileData, 0)) // Initialize font for data reading
+        FT_Library ftLibrary = NULL;
+        FT_Face ftFace = NULL;
+        FT_Error ftError = 0;
+
+        ftError = FT_Init_FreeType(&ftLibrary);
+        if (ftError == 0) ftError = FT_New_Memory_Face(ftLibrary, (const FT_Byte *)fileData, (FT_Long)dataSize, 0, &ftFace);
+        if (ftError == 0) ftError = FT_Set_Pixel_Sizes(ftFace, 0, (FT_UInt)fontSize);
+
+        if (ftError == 0) // FreeType font initialization succeeded
         {
-            // Calculate font scale factor
-            float scaleFactor = stbtt_ScaleForPixelHeight(&fontInfo, (float)fontSize);
+            // Configure SDF renderer spread (in pixels) to match raylib defaults
+            // NOTE: FreeType 'sdf' module uses 128 as on-edge value, which matches FONT_SDF_ON_EDGE_VALUE
+            if (type == FONT_SDF)
+            {
+                FT_Int sdfSpread = (FT_Int)FONT_SDF_CHAR_PADDING;
+                FT_Property_Set(ftLibrary, "sdf", "spread", &sdfSpread);
+            }
 
             // Calculate font basic metrics
-            // NOTE: ascent is equivalent to font baseline
-            int ascent = 0;
-            int descent = 0;
-            int lineGap = 0;
-            stbtt_GetFontVMetrics(&fontInfo, &ascent, &descent, &lineGap);
+            // NOTE: ascent is equivalent to font baseline (in pixels, at requested pixel size)
+            int ascent = (int)(ftFace->size->metrics.ascender >> 6);
+
+            // Create HarfBuzz font wrapping the FreeType face for glyph lookup and advance retrieval
+            hb_font_t *hbFont = hb_ft_font_create_referenced(ftFace);
+            hb_buffer_t *hbBuffer = hb_buffer_create();
 
             // In case no chars count provided, default to 95
             codepointCount = (codepointCount > 0)? codepointCount : 95;
@@ -657,10 +663,9 @@ GlyphInfo *LoadFontData(const unsigned char *fileData, int dataSize, int fontSiz
             }
 
             // Check available glyphs on provided font before loading them
-            for (int i = 0, index; i < codepointCount; i++)
+            for (int i = 0; i < codepointCount; i++)
             {
-                index = stbtt_FindGlyphIndex(&fontInfo, requiredCodepoints[i]);
-                if (index > 0) glyphCounter++;
+                if (FT_Get_Char_Index(ftFace, (FT_ULong)requiredCodepoints[i]) > 0) glyphCounter++;
             }
 
             // WARNING: Allocating space for maximum number of codepoints
@@ -670,69 +675,91 @@ GlyphInfo *LoadFontData(const unsigned char *fileData, int dataSize, int fontSiz
             int k = 0;
             for (int i = 0; i < codepointCount; i++)
             {
-                int cpWidth = 0, cpHeight = 0;   // Codepoint width and height (on generation)
                 int cp = requiredCodepoints[i];  // Codepoint value to get info for
+                int cpWidth = 0, cpHeight = 0;   // Codepoint width and height (on generation)
 
-                //  Render a unicode codepoint to a bitmap
-                //      stbtt_GetCodepointBitmap()           -- allocates and returns a bitmap
-                //      stbtt_GetCodepointBitmapBox()        -- how big the bitmap must be
-                //      stbtt_MakeCodepointBitmap()          -- renders into a provided bitmap
+                // Use HarfBuzz to shape a single-codepoint buffer; this returns the glyph index
+                // (info[0].codepoint after hb_shape is the glyph id) and the shaped advance
+                // NOTE: Shaping a single codepoint won't apply contextual forms (e.g. Arabic init/medi/fina),
+                // but it does map the codepoint to the font's glyph id and honors default GSUB substitutions
+                hb_buffer_reset(hbBuffer);
+                uint32_t hbCodepoint = (uint32_t)cp;
+                hb_buffer_add_utf32(hbBuffer, &hbCodepoint, 1, 0, 1);
+                hb_buffer_guess_segment_properties(hbBuffer);
+                hb_shape(hbFont, hbBuffer, NULL, 0);
 
-                // Check if a glyph is available in the font
-                // WARNING: if (index == 0), glyph not found, it could fallback to default .notdef glyph (if defined in font)
-                int index = stbtt_FindGlyphIndex(&fontInfo, cp);
+                unsigned int hbInfoCount = 0;
+                hb_glyph_info_t *hbInfo = hb_buffer_get_glyph_infos(hbBuffer, &hbInfoCount);
+                hb_glyph_position_t *hbPos = hb_buffer_get_glyph_positions(hbBuffer, &hbInfoCount);
 
-                if (index > 0)
+                FT_UInt glyphIndex = (hbInfoCount > 0)? (FT_UInt)hbInfo[0].codepoint : 0;
+
+                // Fallback to direct char-to-glyph lookup if shaping returned .notdef (0)
+                if (glyphIndex == 0) glyphIndex = FT_Get_Char_Index(ftFace, (FT_ULong)cp);
+
+                if (glyphIndex > 0)
                 {
                     // NOTE: Only storing glyphs for codepoints found in the font
                     glyphs[k].value = cp;
 
-                    switch (type)
+                    // Load and rasterize glyph with FreeType
+                    FT_Error loadErr = 0;
+
+                    if ((type == FONT_SDF) && (cp != 32))
                     {
-                        case FONT_DEFAULT:
-                        case FONT_BITMAP:
+                        loadErr = FT_Load_Glyph(ftFace, glyphIndex, FT_LOAD_DEFAULT);
+                        if (loadErr == 0) loadErr = FT_Render_Glyph(ftFace->glyph, FT_RENDER_MODE_SDF);
+                    }
+                    else
+                    {
+                        loadErr = FT_Load_Glyph(ftFace, glyphIndex, FT_LOAD_RENDER);
+                    }
+
+                    if (loadErr == 0)
+                    {
+                        FT_GlyphSlot slot = ftFace->glyph;
+                        FT_Bitmap *bmp = &slot->bitmap;
+                        cpWidth = (int)bmp->width;
+                        cpHeight = (int)bmp->rows;
+
+                        if ((cpWidth > 0) && (cpHeight > 0) && (bmp->buffer != NULL))
                         {
-                            glyphs[k].image.data = stbtt_GetCodepointBitmap(&fontInfo, scaleFactor, scaleFactor, cp,
-                                &cpWidth, &cpHeight, &glyphs[k].offsetX, &glyphs[k].offsetY);
-                        } break;
-                        case FONT_SDF:
-                        {
-                            if (cp != 32)
+                            // Allocate our own buffer and copy from FreeType (accounting for bitmap pitch,
+                            // which may be negative if the bitmap is flipped)
+                            unsigned char *dst = (unsigned char *)RL_MALLOC((size_t)cpWidth*(size_t)cpHeight);
+                            int pitch = bmp->pitch;
+                            const unsigned char *src = bmp->buffer;
+                            if (pitch < 0) src += (size_t)(cpHeight - 1)*(size_t)(-pitch);
+
+                            for (int row = 0; row < cpHeight; row++)
                             {
-                                glyphs[k].image.data = stbtt_GetCodepointSDF(&fontInfo, scaleFactor, cp,
-                                    FONT_SDF_CHAR_PADDING, FONT_SDF_ON_EDGE_VALUE, FONT_SDF_PIXEL_DIST_SCALE,
-                                    &cpWidth, &cpHeight, &glyphs[k].offsetX, &glyphs[k].offsetY);
+                                memcpy(dst + (size_t)row*(size_t)cpWidth,
+                                       src + (size_t)row*(size_t)pitch,
+                                       (size_t)cpWidth);
                             }
-                        } break;
-                        //case FONT_MSDF:
-                        default: break;
+
+                            glyphs[k].image.data = dst;
+                            glyphs[k].offsetX = slot->bitmap_left;
+                            glyphs[k].offsetY = ascent - slot->bitmap_top;
+
+                            glyphs[k].image.width = cpWidth;
+                            glyphs[k].image.height = cpHeight;
+                            glyphs[k].image.mipmaps = 1;
+                            glyphs[k].image.format = PIXELFORMAT_UNCOMPRESSED_GRAYSCALE;
+
+                            // WARNING: If requested SDF font, sdf-glyph height is bigger than fontSize due to FONT_SDF_CHAR_PADDING
+                            if ((type != FONT_SDF) && (cpHeight > fontSize)) TRACELOG(LOG_WARNING, "FONT: [0x%04x] Glyph height is bigger than requested font size: %i > %i", cp, cpHeight, (int)fontSize);
+                        }
+
+                        // Use HarfBuzz advance when available (HarfBuzz returns 26.6 fixed-point pixels)
+                        if (hbInfoCount > 0) glyphs[k].advanceX = (int)(hbPos[0].x_advance >> 6);
+                        else glyphs[k].advanceX = (int)(slot->advance.x >> 6);
                     }
-
-                    if (glyphs[k].image.data != NULL)    // Glyph data has been found in the font
-                    {
-                        stbtt_GetCodepointHMetrics(&fontInfo, cp, &glyphs[k].advanceX, NULL);
-                        glyphs[k].advanceX = (int)((float)glyphs[k].advanceX*scaleFactor);
-
-                        // WARNING: If requested SDF font, sdf-glyph height is definitely bigger than fontSize due to FONT_SDF_CHAR_PADDING
-                        if ((type != FONT_SDF) && (cpHeight > fontSize)) TRACELOG(LOG_WARNING, "FONT: [0x%04x] Glyph height is bigger than requested font size: %i > %i", cp, cpHeight, (int)fontSize);
-
-                        // Load glyph image
-                        glyphs[k].image.width = cpWidth;
-                        glyphs[k].image.height = cpHeight;
-                        glyphs[k].image.mipmaps = 1;
-                        glyphs[k].image.format = PIXELFORMAT_UNCOMPRESSED_GRAYSCALE;
-
-                        glyphs[k].offsetY += (int)((float)ascent*scaleFactor);
-                    }
-                    //else TRACELOG(LOG_WARNING, "FONT: Glyph [0x%08x] has no image data available", cp); // Only reported for 0x20 and 0x3000
 
                     // Create an empty image for Space character (0x20), useful for sprite font generation
                     // NOTE: Another space to consider: 0x3000 (CJK - Ideographic Space)
                     if ((cp == 0x20) || (cp == 0x3000))
                     {
-                        stbtt_GetCodepointHMetrics(&fontInfo, cp, &glyphs[k].advanceX, NULL);
-                        glyphs[k].advanceX = (int)((float)glyphs[k].advanceX*scaleFactor);
-
                         Image imSpace = {
                             .data = NULL,
                             .width = glyphs[k].advanceX,
@@ -745,10 +772,12 @@ GlyphInfo *LoadFontData(const unsigned char *fileData, int dataSize, int fontSiz
                         if (glyphs[k].advanceX > 0) imSpace.data = RL_CALLOC(glyphs[k].advanceX*fontSize, 1);
                         else glyphs[k].advanceX = 0;
 
+                        // Release previously allocated bitmap (if any) and replace with space image
+                        if (glyphs[k].image.data != NULL) RL_FREE(glyphs[k].image.data);
                         glyphs[k].image = imSpace;
                     }
 
-                    if (type == FONT_BITMAP)
+                    if ((type == FONT_BITMAP) && (glyphs[k].image.data != NULL))
                     {
                         // Aliased bitmap (black & white) font generation, avoiding anti-aliasing
                         // NOTE: For optimum results, bitmap font should be generated at base pixel size
@@ -770,8 +799,14 @@ GlyphInfo *LoadFontData(const unsigned char *fileData, int dataSize, int fontSiz
             }
 
             if (glyphCounter < codepointCount) TRACELOG(LOG_WARNING, "FONT: Requested codepoints glyphs found: [%i/%i]", k, codepointCount);
+
+            hb_buffer_destroy(hbBuffer);
+            hb_font_destroy(hbFont);
         }
-        else TRACELOG(LOG_WARNING, "FONT: Failed to process TTF font data");
+        else TRACELOG(LOG_WARNING, "FONT: Failed to process TTF font data (FreeType error: 0x%02X)", ftError);
+
+        if (ftFace != NULL) FT_Done_Face(ftFace);
+        if (ftLibrary != NULL) FT_Done_FreeType(ftLibrary);
 
         if (genFontChars) RL_FREE(requiredCodepoints);
     }

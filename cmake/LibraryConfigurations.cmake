@@ -225,3 +225,16 @@ set(LIBS_PRIVATE ${LIBS_PRIVATE} ${OPENAL_LIBRARY})
 if (${PLATFORM} MATCHES "Desktop")
     set(LIBS_PRIVATE ${LIBS_PRIVATE} glfw)
 endif ()
+
+# Font rendering (TTF/OTF) requires FreeType for rasterization and HarfBuzz for shaping
+if (SUPPORT_FILEFORMAT_TTF)
+    find_package(Freetype REQUIRED)
+    include_directories(${FREETYPE_INCLUDE_DIRS})
+    set(LIBS_PRIVATE ${LIBS_PRIVATE} ${FREETYPE_LIBRARIES})
+    set(RAYLIB_DEPENDENCIES "${RAYLIB_DEPENDENCIES}\nfind_dependency(Freetype)")
+
+    find_package(PkgConfig REQUIRED)
+    pkg_check_modules(HARFBUZZ REQUIRED IMPORTED_TARGET harfbuzz)
+    include_directories(${HARFBUZZ_INCLUDE_DIRS})
+    set(LIBS_PRIVATE ${LIBS_PRIVATE} PkgConfig::HARFBUZZ)
+endif ()
