@@ -10,9 +10,21 @@ install(
 if (NOT BUILD_SHARED_LIBS)
     include(LibraryPathToLinkerFlags)
     set(PKG_CONFIG_LIBS_PRIVATE ${GLFW_PKG_LIBS})
+    if (SUPPORT_FILEFORMAT_TTF)
+        list(APPEND PKG_CONFIG_LIBS_PRIVATE -lfreetype -lharfbuzz)
+    endif ()
     string(REPLACE ";" " " PKG_CONFIG_LIBS_PRIVATE "${PKG_CONFIG_LIBS_PRIVATE}")
 elseif (BUILD_SHARED_LIBS)
     set(PKG_CONFIG_LIBS_EXTRA "")
+endif ()
+
+# Add freetype2/harfbuzz as pkg-config Requires.private so downstream consumers pick them up
+if (SUPPORT_FILEFORMAT_TTF)
+    if (DEFINED GLFW_PKG_DEPS)
+        set(GLFW_PKG_DEPS "${GLFW_PKG_DEPS} freetype2 harfbuzz")
+    else ()
+        set(GLFW_PKG_DEPS "freetype2 harfbuzz")
+    endif ()
 endif ()
 
 join_paths(libdir_for_pc_file "\${exec_prefix}" "${CMAKE_INSTALL_LIBDIR}")

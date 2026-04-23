@@ -41,7 +41,8 @@
 *       [rtextures] stb_image_resize2 (Sean Barrett) for image resizing algorithms
 *       [rtextures] stb_perlin (Sean Barrett) for Perlin Noise image generation
 *       [rtextures] rltexgpu (Ramon Santamaria) for GPU-compressed texture formats
-*       [rtext] stb_truetype (Sean Barrett) for ttf fonts loading
+*       [rtext] FreeType (The FreeType Project) for TTF/OTF font loading and rasterization (normal + SDF)
+*       [rtext] HarfBuzz (Behdad Esfahbod et al.) for text shaping (glyph index/advance lookup)
 *       [rtext] stb_rect_pack (Sean Barrett) for rectangles packing
 *       [rmodels] par_shapes (Philip Rideout) for parametric 3d shapes generation
 *       [rmodels] tinyobj_loader_c (Syoyo Fujita) for models loading (OBJ, MTL)

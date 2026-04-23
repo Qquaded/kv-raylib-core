@@ -726,6 +726,23 @@ ifeq ($(TARGET_PLATFORM),PLATFORM_ANDROID)
     LDLIBS = -llog -landroid -lEGL -lGLESv2 -lOpenSLES -lc -lm
 endif
 
+# FreeType and HarfBuzz are required for TTF/OTF font rasterization and shaping (rtext module)
+# They can be overridden by the user (e.g. to link prebuilt libs on Android/embedded).
+FREETYPE_CFLAGS ?= $(shell pkg-config --cflags freetype2 2>/dev/null)
+FREETYPE_LIBS   ?= $(shell pkg-config --libs freetype2 2>/dev/null)
+HARFBUZZ_CFLAGS ?= $(shell pkg-config --cflags harfbuzz 2>/dev/null)
+HARFBUZZ_LIBS   ?= $(shell pkg-config --libs harfbuzz 2>/dev/null)
+
+ifeq ($(strip $(FREETYPE_LIBS)),)
+    FREETYPE_LIBS = -lfreetype
+endif
+ifeq ($(strip $(HARFBUZZ_LIBS)),)
+    HARFBUZZ_LIBS = -lharfbuzz
+endif
+
+CFLAGS  += $(FREETYPE_CFLAGS) $(HARFBUZZ_CFLAGS)
+LDLIBS  += $(FREETYPE_LIBS) $(HARFBUZZ_LIBS)
+
 # Define source code object files required
 #------------------------------------------------------------------------------------------------
 OBJS = rcore.o \
