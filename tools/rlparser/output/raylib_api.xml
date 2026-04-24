@@ -682,7 +682,7 @@
             <Param type="unsigned int" name="frames" desc="" />
         </Callback>
     </Callbacks>
-    <Functions count="600">
+    <Functions count="606">
         <Function name="InitWindow" retType="void" paramCount="3" desc="Initialize window and OpenGL context">
             <Param type="int" name="width" desc="" />
             <Param type="int" name="height" desc="" />
@@ -2422,6 +2422,36 @@
             <Param type="float" name="fontSize" desc="" />
             <Param type="float" name="spacing" desc="" />
             <Param type="Color" name="tint" desc="" />
+        </Function>
+        <Function name="LoadFontShaper" retType="FontShaper *" paramCount="2" desc="Load a FontShaper from a TTF/OTF file at the given base pixel size">
+            <Param type="const char *" name="fileName" desc="" />
+            <Param type="int" name="fontSize" desc="" />
+        </Function>
+        <Function name="LoadFontShaperFromMemory" retType="FontShaper *" paramCount="4" desc="Load a FontShaper from font data in memory">
+            <Param type="const char *" name="fileType" desc="" />
+            <Param type="const unsigned char *" name="fileData" desc="" />
+            <Param type="int" name="dataSize" desc="" />
+            <Param type="int" name="fontSize" desc="" />
+        </Function>
+        <Function name="IsFontShaperValid" retType="bool" paramCount="1" desc="Check if a FontShaper is valid (data loaded)">
+            <Param type="const FontShaper *" name="shaper" desc="" />
+        </Function>
+        <Function name="UnloadFontShaper" retType="void" paramCount="1" desc="Unload FontShaper from memory and GPU">
+            <Param type="FontShaper *" name="shaper" desc="" />
+        </Function>
+        <Function name="DrawTextShaped" retType="void" paramCount="6" desc="Draw shaped text (uses HarfBuzz for shaping: joining, RTL, ligatures)">
+            <Param type="FontShaper *" name="shaper" desc="" />
+            <Param type="const char *" name="text" desc="" />
+            <Param type="Vector2" name="position" desc="" />
+            <Param type="float" name="fontSize" desc="" />
+            <Param type="float" name="spacing" desc="" />
+            <Param type="Color" name="tint" desc="" />
+        </Function>
+        <Function name="MeasureTextShaped" retType="Vector2" paramCount="4" desc="Measure shaped text size">
+            <Param type="FontShaper *" name="shaper" desc="" />
+            <Param type="const char *" name="text" desc="" />
+            <Param type="float" name="fontSize" desc="" />
+            <Param type="float" name="spacing" desc="" />
         </Function>
         <Function name="SetTextLineSpacing" retType="void" paramCount="1" desc="Set vertical line spacing when drawing with line-breaks">
             <Param type="int" name="spacing" desc="" />

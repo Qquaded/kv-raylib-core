@@ -1507,6 +1507,16 @@ RLAPI void DrawTextPro(Font font, const char *text, Vector2 position, Vector2 or
 RLAPI void DrawTextCodepoint(Font font, int codepoint, Vector2 position, float fontSize, Color tint); // Draw one character (codepoint)
 RLAPI void DrawTextCodepoints(Font font, const int *codepoints, int codepointCount, Vector2 position, float fontSize, float spacing, Color tint); // Draw multiple character (codepoint)
 
+// Shaped text drawing functions (HarfBuzz-backed, correctly handles Arabic, complex scripts, BiDi, ligatures)
+// FontShaper is an opaque handle wrapping a FreeType face + HarfBuzz font + glyph cache
+typedef struct FontShaper FontShaper;
+RLAPI FontShaper *LoadFontShaper(const char *fileName, int fontSize);                       // Load a FontShaper from a TTF/OTF file at the given base pixel size
+RLAPI FontShaper *LoadFontShaperFromMemory(const char *fileType, const unsigned char *fileData, int dataSize, int fontSize); // Load a FontShaper from font data in memory
+RLAPI bool IsFontShaperValid(const FontShaper *shaper);                                     // Check if a FontShaper is valid (data loaded)
+RLAPI void UnloadFontShaper(FontShaper *shaper);                                            // Unload FontShaper from memory and GPU
+RLAPI void DrawTextShaped(FontShaper *shaper, const char *text, Vector2 position, float fontSize, float spacing, Color tint); // Draw shaped text (uses HarfBuzz for shaping: joining, RTL, ligatures)
+RLAPI Vector2 MeasureTextShaped(FontShaper *shaper, const char *text, float fontSize, float spacing); // Measure shaped text size
+
 // Text font info functions
 RLAPI void SetTextLineSpacing(int spacing);                                                 // Set vertical line spacing when drawing with line-breaks
 RLAPI int MeasureText(const char *text, int fontSize);                                      // Measure string width for default font
