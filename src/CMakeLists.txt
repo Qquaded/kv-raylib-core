@@ -28,9 +28,6 @@ set(raylib_public_headers
     raymath.h
     )
 
-find_package(PkgConfig REQUIRED)
-pkg_check_modules(FFMPEG REQUIRED IMPORTED_TARGET libavformat libavcodec libswscale libavutil)
-
 # Sources to be compiled
 set(raylib_sources
     raudio.c
@@ -100,7 +97,7 @@ if (BUILD_SHARED_LIBS)
     set_property(TARGET raylib PROPERTY C_VISIBILITY_PRESET hidden)
 endif ()
 
-target_link_libraries(raylib PRIVATE $<BUILD_INTERFACE:${LIBS_PRIVATE}> PkgConfig::FFMPEG)
+target_link_libraries(raylib PRIVATE $<BUILD_INTERFACE:${LIBS_PRIVATE}>)
 target_link_libraries(raylib PUBLIC ${LIBS_PUBLIC})
 
 # Bundle freetype and harfbuzz into the shared library

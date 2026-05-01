@@ -631,8 +631,6 @@ endif
 # Define libraries required on linking: LDLIBS
 # NOTE: This is only required for dynamic library generation
 #------------------------------------------------------------------------------------------------
-LDLIBS += $(shell pkg-config --libs --static libavformat libavcodec libswscale libavutil)
-
 ifeq ($(TARGET_PLATFORM),PLATFORM_DESKTOP_GLFW)
     ifeq ($(PLATFORM_OS),WINDOWS)
         ifeq ($(CC), tcc)
@@ -881,6 +879,10 @@ rtextures.o : rtextures.c raylib.h rlgl.h
 
 # Compile text module
 rtext.o : rtext.c raylib.h
+	$(CC) -c $< $(CFLAGS) $(INCLUDE_PATHS)
+
+# Compile video module
+rvideo.o : rvideo.c raylib.h rlgl.h
 	$(CC) -c $< $(CFLAGS) $(INCLUDE_PATHS)
 
 # Compile models module

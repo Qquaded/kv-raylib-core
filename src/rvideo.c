@@ -1,87 +1,26 @@
 #include "raylib.h"
 #include "rlgl.h"
 
-#include <libavformat/avformat.h>
-#include <libavcodec/avcodec.h>
-#include <libswscale/swscale.h>
-#include <libavutil/imgutils.h>
+#include <stdio.h>
+#include <stddef.h>
+
+#define PL_MPEG_IMPLEMENTATION
+#include "pl_mpeg.h"
 
 // Load video from file
 Video LoadVideo(const char *fileName)
 {
     Video video = { 0 };
-    video.streamIndex = -1;
 
-    AVFormatContext *formatCtx = NULL;
-    if (avformat_open_input(&formatCtx, fileName, NULL, NULL) != 0) {
-        TraceLog(LOG_WARNING, "VIDEO: Failed to open video file");
+    plm_t *plm = plm_create_with_filename(fileName);
+    if (!plm) {
+        TraceLog(LOG_WARNING, "VIDEO: [%s] Failed to open video file", fileName);
         return video;
     }
 
-    if (avformat_find_stream_info(formatCtx, NULL) < 0) {
-        TraceLog(LOG_WARNING, "VIDEO: Failed to find stream info");
-        avformat_close_input(&formatCtx);
-        return video;
-    }
-
-    // Find the first video stream
-    for (int i = 0; i < formatCtx->nb_streams; i++) {
-        if (formatCtx->streams[i]->codecpar->codec_type == AVMEDIA_TYPE_VIDEO) {
-            video.streamIndex = i;
-            break;
-        }
-    }
-
-    if (video.streamIndex == -1) {
-        TraceLog(LOG_WARNING, "VIDEO: Didn't find a video stream");
-        avformat_close_input(&formatCtx);
-        return video;
-    }
-
-    AVCodecParameters *codecParameters = formatCtx->streams[video.streamIndex]->codecpar;
-    const AVCodec *codec = avcodec_find_decoder(codecParameters->codec_id);
-    if (!codec) {
-        TraceLog(LOG_WARNING, "VIDEO: Unsupported codec");
-        avformat_close_input(&formatCtx);
-        return video;
-    }
-
-    AVCodecContext *codecCtx = avcodec_alloc_context3(codec);
-    if (!codecCtx) {
-        TraceLog(LOG_WARNING, "VIDEO: Failed to allocate codec context");
-        avformat_close_input(&formatCtx);
-        return video;
-    }
-
-    if (avcodec_parameters_to_context(codecCtx, codecParameters) < 0) {
-        TraceLog(LOG_WARNING, "VIDEO: Failed to copy codec parameters to codec context");
-        avcodec_free_context(&codecCtx);
-        avformat_close_input(&formatCtx);
-        return video;
-    }
-
-    if (avcodec_open2(codecCtx, codec, NULL) < 0) {
-        TraceLog(LOG_WARNING, "VIDEO: Failed to open codec");
-        avcodec_free_context(&codecCtx);
-        avformat_close_input(&formatCtx);
-        return video;
-    }
-
-    video.width = codecCtx->width;
-    video.height = codecCtx->height;
-
-    AVRational frameRate = formatCtx->streams[video.streamIndex]->avg_frame_rate;
-    if (frameRate.den != 0 && frameRate.num != 0) {
-        video.frameRate = av_q2d(frameRate);
-    } else {
-        video.frameRate = 30.0; // fallback
-    }
-
-    struct SwsContext *swsCtx = sws_getContext(
-        codecCtx->width, codecCtx->height, codecCtx->pix_fmt,
-        video.width, video.height, AV_PIX_FMT_RGBA,
-        SWS_BILINEAR, NULL, NULL, NULL
-    );
+    video.width = plm_get_width(plm);
+    video.height = plm_get_height(plm);
+    video.frameRate = plm_get_framerate(plm);
 
     Image img = { 0 };
     img.width = video.width;
@@ -93,14 +32,9 @@ Video LoadVideo(const char *fileName)
     video.texture = LoadTextureFromImage(img);
     UnloadImage(img);
 
-    video.ctx = formatCtx;
-    video.vctx = codecCtx;
-    video.frame = av_frame_alloc();
-    video.sws = swsCtx;
+    video.ctx = plm;
     video.ready = true;
     video.playing = false;
-    video.timeElapsed = 0.0;
-    video.nextPts = -1;
 
     TraceLog(LOG_INFO, "VIDEO: [%s] Loaded successfully (%ix%i) at %.2f FPS", fileName, video.width, video.height, video.frameRate);
 
@@ -111,16 +45,7 @@ Video LoadVideo(const char *fileName)
 void UnloadVideo(Video video)
 {
     if (video.ctx) {
-        avformat_close_input((AVFormatContext**)&video.ctx);
-    }
-    if (video.vctx) {
-        avcodec_free_context((AVCodecContext**)&video.vctx);
-    }
-    if (video.frame) {
-        av_frame_free((AVFrame**)&video.frame);
-    }
-    if (video.sws) {
-        sws_freeContext((struct SwsContext *)video.sws);
+        plm_destroy((plm_t *)video.ctx);
     }
     UnloadTexture(video.texture);
 }
@@ -138,13 +63,8 @@ void StopVideo(Video *video)
 {
     if (video && video->ready) {
         video->playing = false;
-        // Optionally reset stream to beginning
         if (video->ctx) {
-            AVFormatContext *formatCtx = (AVFormatContext *)video->ctx;
-            av_seek_frame(formatCtx, video->streamIndex, 0, AVSEEK_FLAG_BACKWARD);
-            avcodec_flush_buffers((AVCodecContext *)video->vctx);
-            video->timeElapsed = 0.0;
-            video->nextPts = -1;
+            plm_rewind((plm_t *)video->ctx);
         }
     }
 }
@@ -152,81 +72,24 @@ void StopVideo(Video *video)
 // Update video frame to texture
 void UpdateVideo(Video *video)
 {
-    if (!video || !video->ready || !video->playing) return;
+    if (!video || !video->ready || !video->playing || !video->ctx) return;
 
-    video->timeElapsed += GetFrameTime();
+    plm_t *plm = (plm_t *)video->ctx;
 
-    AVFormatContext *formatCtx = (AVFormatContext *)video->ctx;
-    AVCodecContext *codecCtx = (AVCodecContext *)video->vctx;
-    AVFrame *frame = (AVFrame *)video->frame;
-    struct SwsContext *swsCtx = (struct SwsContext *)video->sws;
-    AVStream *stream = formatCtx->streams[video->streamIndex];
+    // Decode next frame if time has elapsed
+    plm_frame_t *frame = plm_decode_video(plm);
 
-    // Check if it's time to decode the next frame
-    double currentTime = video->timeElapsed;
-
-    if (video->nextPts != -1) {
-        double nextTime = video->nextPts * av_q2d(stream->time_base);
-        if (currentTime < nextTime) {
-            return; // Not time yet
+    if (frame) {
+        // Convert to RGBA
+        uint8_t *dest = MemAlloc(video->width * video->height * 4);
+        if (dest) {
+            plm_frame_to_rgba(frame, dest, video->width * 4);
+            UpdateTexture(video->texture, dest);
+            MemFree(dest);
         }
     }
 
-    AVPacket *packet = av_packet_alloc();
-    if (!packet) return;
-
-    bool frameDecoded = false;
-
-    while (av_read_frame(formatCtx, packet) >= 0) {
-        if (packet->stream_index == video->streamIndex) {
-            int response = avcodec_send_packet(codecCtx, packet);
-            if (response < 0 && response != AVERROR(EAGAIN) && response != AVERROR_EOF) {
-                TraceLog(LOG_WARNING, "VIDEO: Error while sending a packet to the decoder");
-                break;
-            }
-
-            while (response >= 0) {
-                response = avcodec_receive_frame(codecCtx, frame);
-                if (response == AVERROR(EAGAIN) || response == AVERROR_EOF) {
-                    break;
-                } else if (response < 0) {
-                    TraceLog(LOG_WARNING, "VIDEO: Error while receiving a frame from the decoder");
-                    break;
-                }
-
-                if (swsCtx) {
-                    uint8_t *destData[4] = { NULL };
-                    int destLinesize[4] = { 0 };
-
-                    av_image_alloc(destData, destLinesize, video->width, video->height, AV_PIX_FMT_RGBA, 1);
-
-                    sws_scale(swsCtx, (const uint8_t * const *)frame->data, frame->linesize,
-                              0, codecCtx->height, destData, destLinesize);
-
-                    UpdateTexture(video->texture, destData[0]);
-
-                    av_freep(&destData[0]);
-                }
-
-                if (frame->pts != AV_NOPTS_VALUE) {
-                    video->nextPts = frame->pts;
-                } else {
-                    // Try to guess next pts based on framerate if not provided
-                    video->nextPts += (int64_t)(1.0 / (video->frameRate * av_q2d(stream->time_base)));
-                }
-
-                frameDecoded = true;
-                break; // Only decode one frame per UpdateVideo call
-            }
-        }
-        av_packet_unref(packet);
-        if (frameDecoded) break;
-    }
-
-    av_packet_free(&packet);
-
-    // Check if video ended
-    if (!frameDecoded) {
+    if (plm_has_ended(plm)) {
         StopVideo(video);
     }
 }

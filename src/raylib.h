@@ -492,19 +492,13 @@ typedef struct Sound {
 
 // Video, handles playing video files
 typedef struct Video {
-    void *ctx;              // Format context (AVFormatContext)
-    void *vctx;             // Video codec context (AVCodecContext)
-    void *frame;            // Video frame (AVFrame)
-    void *sws;              // Sws context (SwsContext)
+    void *ctx;              // Format context (plm_t)
     Texture2D texture;      // Output texture for rendering
     int width;              // Video width
     int height;             // Video height
-    int streamIndex;        // Video stream index
+    double frameRate;       // Video frame rate
     bool playing;           // Is video playing
     bool ready;             // Is video ready to be played
-    double timeElapsed;     // Time elapsed
-    double frameRate;       // Video frame rate
-    long long nextPts;      // Next frame Presentation Timestamp
 } Video;
 
 // Music, audio stream, anything longer than ~10 seconds should be streamed
