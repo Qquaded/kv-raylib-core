@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="Windows-1252" ?>
 <raylibAPI>
-    <Defines count="57">
+    <Defines count="58">
         <Define name="RAYLIB_H" type="GUARD" value="" desc="" />
         <Define name="RAYLIB_VERSION_MAJOR" type="INT" value="6" desc="" />
         <Define name="RAYLIB_VERSION_MINOR" type="INT" value="0" desc="" />
@@ -58,8 +58,9 @@
         <Define name="SHADER_LOC_MAP_DIFFUSE" type="UNKNOWN" value="SHADER_LOC_MAP_ALBEDO" desc="" />
         <Define name="SHADER_LOC_MAP_SPECULAR" type="UNKNOWN" value="SHADER_LOC_MAP_METALNESS" desc="" />
         <Define name="GetMouseRay" type="UNKNOWN" value="GetScreenToWorldRay" desc="Compatibility hack for previous raylib versions" />
+        <Define name="NewVideo" type="UNKNOWN" value="LoadVideo" desc="" />
     </Defines>
-    <Structs count="35">
+    <Structs count="36">
         <Struct name="Vector2" fieldCount="2" desc="Vector2, 2 components">
             <Field type="float" name="x" desc="Vector x component" />
             <Field type="float" name="y" desc="Vector y component" />
@@ -254,6 +255,21 @@
         <Struct name="Sound" fieldCount="2" desc="Sound">
             <Field type="AudioStream" name="stream" desc="Audio stream" />
             <Field type="unsigned int" name="frameCount" desc="Total number of frames (considering channels)" />
+        </Struct>
+        <Struct name="Video" fieldCount="13" desc="Video, handles playing video files">
+            <Field type="void *" name="ctx" desc="Format context (AVFormatContext)" />
+            <Field type="void *" name="vctx" desc="Video codec context (AVCodecContext)" />
+            <Field type="void *" name="frame" desc="Video frame (AVFrame)" />
+            <Field type="void *" name="sws" desc="Sws context (SwsContext)" />
+            <Field type="Texture2D" name="texture" desc="Output texture for rendering" />
+            <Field type="int" name="width" desc="Video width" />
+            <Field type="int" name="height" desc="Video height" />
+            <Field type="int" name="streamIndex" desc="Video stream index" />
+            <Field type="bool" name="playing" desc="Is video playing" />
+            <Field type="bool" name="ready" desc="Is video ready to be played" />
+            <Field type="double" name="timeElapsed" desc="Time elapsed" />
+            <Field type="double" name="frameRate" desc="Video frame rate" />
+            <Field type="long long" name="nextPts" desc="Next frame Presentation Timestamp" />
         </Struct>
         <Struct name="Music" fieldCount="5" desc="Music, audio stream, anything longer than ~10 seconds should be streamed">
             <Field type="AudioStream" name="stream" desc="Audio stream" />
@@ -682,7 +698,7 @@
             <Param type="unsigned int" name="frames" desc="" />
         </Callback>
     </Callbacks>
-    <Functions count="606">
+    <Functions count="611">
         <Function name="InitWindow" retType="void" paramCount="3" desc="Initialize window and OpenGL context">
             <Param type="int" name="width" desc="" />
             <Param type="int" name="height" desc="" />
@@ -3012,6 +3028,21 @@
             <Param type="Vector3" name="p2" desc="" />
             <Param type="Vector3" name="p3" desc="" />
             <Param type="Vector3" name="p4" desc="" />
+        </Function>
+        <Function name="LoadVideo" retType="Video" paramCount="1" desc="Load video stream from file">
+            <Param type="const char *" name="fileName" desc="" />
+        </Function>
+        <Function name="UnloadVideo" retType="void" paramCount="1" desc="Unload video stream">
+            <Param type="Video" name="video" desc="" />
+        </Function>
+        <Function name="PlayVideo" retType="void" paramCount="1" desc="Start video playing">
+            <Param type="Video *" name="video" desc="" />
+        </Function>
+        <Function name="UpdateVideo" retType="void" paramCount="1" desc="Updates video frame to texture">
+            <Param type="Video *" name="video" desc="" />
+        </Function>
+        <Function name="StopVideo" retType="void" paramCount="1" desc="Stop video playing">
+            <Param type="Video *" name="video" desc="" />
         </Function>
         <Function name="InitAudioDevice" retType="void" paramCount="0" desc="Initialize audio device and context">
         </Function>
