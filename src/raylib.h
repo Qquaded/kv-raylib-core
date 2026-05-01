@@ -490,6 +490,23 @@ typedef struct Sound {
     unsigned int frameCount;    // Total number of frames (considering channels)
 } Sound;
 
+// Video, handles playing video files
+typedef struct Video {
+    void *ctx;              // Format context (AVFormatContext)
+    void *vctx;             // Video codec context (AVCodecContext)
+    void *frame;            // Video frame (AVFrame)
+    void *sws;              // Sws context (SwsContext)
+    Texture2D texture;      // Output texture for rendering
+    int width;              // Video width
+    int height;             // Video height
+    int streamIndex;        // Video stream index
+    bool playing;           // Is video playing
+    bool ready;             // Is video ready to be played
+    double timeElapsed;     // Time elapsed
+    double frameRate;       // Video frame rate
+    long long nextPts;      // Next frame Presentation Timestamp
+} Video;
+
 // Music, audio stream, anything longer than ~10 seconds should be streamed
 typedef struct Music {
     AudioStream stream;         // Audio stream
@@ -1663,6 +1680,17 @@ RLAPI RayCollision GetRayCollisionBox(Ray ray, BoundingBox box);                
 RLAPI RayCollision GetRayCollisionMesh(Ray ray, Mesh mesh, Matrix transform);               // Get collision info between ray and mesh
 RLAPI RayCollision GetRayCollisionTriangle(Ray ray, Vector3 p1, Vector3 p2, Vector3 p3);    // Get collision info between ray and triangle
 RLAPI RayCollision GetRayCollisionQuad(Ray ray, Vector3 p1, Vector3 p2, Vector3 p3, Vector3 p4); // Get collision info between ray and quad
+
+//------------------------------------------------------------------------------------
+// Video Loading and Playing Functions (Module: rvideo)
+//------------------------------------------------------------------------------------
+RLAPI Video LoadVideo(const char *fileName);                          // Load video stream from file
+RLAPI void UnloadVideo(Video video);                                  // Unload video stream
+RLAPI void PlayVideo(Video *video);                                   // Start video playing
+RLAPI void UpdateVideo(Video *video);                                 // Updates video frame to texture
+RLAPI void StopVideo(Video *video);                                   // Stop video playing
+
+#define NewVideo LoadVideo
 
 //------------------------------------------------------------------------------------
 // Audio Loading and Playing Functions (Module: audio)

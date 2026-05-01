@@ -631,6 +631,8 @@ endif
 # Define libraries required on linking: LDLIBS
 # NOTE: This is only required for dynamic library generation
 #------------------------------------------------------------------------------------------------
+LDLIBS += $(shell pkg-config --libs --static libavformat libavcodec libswscale libavutil)
+
 ifeq ($(TARGET_PLATFORM),PLATFORM_DESKTOP_GLFW)
     ifeq ($(PLATFORM_OS),WINDOWS)
         ifeq ($(CC), tcc)
@@ -748,7 +750,8 @@ LDLIBS  += $(FREETYPE_LIBS) $(HARFBUZZ_LIBS)
 OBJS = rcore.o \
        rshapes.o \
        rtextures.o \
-       rtext.o
+       rtext.o \
+       rvideo.o
 
 ifeq ($(TARGET_PLATFORM),PLATFORM_DESKTOP_GLFW)
     ifeq ($(USE_EXTERNAL_GLFW),FALSE)
