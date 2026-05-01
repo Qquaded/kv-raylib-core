@@ -1000,7 +1000,7 @@ Callback 006: AudioCallback() (2 input parameters)
   Param[1]: bufferData (type: void *)
   Param[2]: frames (type: unsigned int)
 
-Functions found: 606
+Functions found: 610
 
 Function 001: InitWindow() (3 input parameters)
   Name: InitWindow
@@ -2468,7 +2468,28 @@ Function 254: DrawRectangleRoundedLinesEx() (5 input parameters)
   Param[3]: segments (type: int)
   Param[4]: lineThick (type: float)
   Param[5]: color (type: Color)
-Function 255: DrawTriangle() (4 input parameters)
+Function 255: DrawRectangleRoundedPro() (6 input parameters)
+  Name: DrawRectangleRoundedPro
+  Return type: void
+  Description: Draw rectangle with rounded edges and pro parameters
+  Param[1]: rec (type: Rectangle)
+  Param[2]: roundness (type: float)
+  Param[3]: segments (type: int)
+  Param[4]: origin (type: Vector2)
+  Param[5]: rotation (type: float)
+  Param[6]: color (type: Color)
+Function 256: DrawRectangleRoundedLinesPro() (7 input parameters)
+  Name: DrawRectangleRoundedLinesPro
+  Return type: void
+  Description: Draw rectangle lines with rounded edges and pro parameters
+  Param[1]: rec (type: Rectangle)
+  Param[2]: roundness (type: float)
+  Param[3]: segments (type: int)
+  Param[4]: origin (type: Vector2)
+  Param[5]: rotation (type: float)
+  Param[6]: lineThick (type: float)
+  Param[7]: color (type: Color)
+Function 257: DrawTriangle() (4 input parameters)
   Name: DrawTriangle
   Return type: void
   Description: Draw a color-filled triangle (vertex in counter-clockwise order!)
@@ -2476,7 +2497,7 @@ Function 255: DrawTriangle() (4 input parameters)
   Param[2]: v2 (type: Vector2)
   Param[3]: v3 (type: Vector2)
   Param[4]: color (type: Color)
-Function 256: DrawTriangleLines() (4 input parameters)
+Function 258: DrawTriangleLines() (4 input parameters)
   Name: DrawTriangleLines
   Return type: void
   Description: Draw triangle outline (vertex in counter-clockwise order!)
@@ -2484,21 +2505,21 @@ Function 256: DrawTriangleLines() (4 input parameters)
   Param[2]: v2 (type: Vector2)
   Param[3]: v3 (type: Vector2)
   Param[4]: color (type: Color)
-Function 257: DrawTriangleFan() (3 input parameters)
+Function 259: DrawTriangleFan() (3 input parameters)
   Name: DrawTriangleFan
   Return type: void
   Description: Draw a triangle fan defined by points (first vertex is the center)
   Param[1]: points (type: const Vector2 *)
   Param[2]: pointCount (type: int)
   Param[3]: color (type: Color)
-Function 258: DrawTriangleStrip() (3 input parameters)
+Function 260: DrawTriangleStrip() (3 input parameters)
   Name: DrawTriangleStrip
   Return type: void
   Description: Draw a triangle strip defined by points
   Param[1]: points (type: const Vector2 *)
   Param[2]: pointCount (type: int)
   Param[3]: color (type: Color)
-Function 259: DrawPoly() (5 input parameters)
+Function 261: DrawPoly() (5 input parameters)
   Name: DrawPoly
   Return type: void
   Description: Draw a regular polygon (Vector version)
@@ -2507,7 +2528,7 @@ Function 259: DrawPoly() (5 input parameters)
   Param[3]: radius (type: float)
   Param[4]: rotation (type: float)
   Param[5]: color (type: Color)
-Function 260: DrawPolyLines() (5 input parameters)
+Function 262: DrawPolyLines() (5 input parameters)
   Name: DrawPolyLines
   Return type: void
   Description: Draw a polygon outline of n sides
@@ -2516,7 +2537,7 @@ Function 260: DrawPolyLines() (5 input parameters)
   Param[3]: radius (type: float)
   Param[4]: rotation (type: float)
   Param[5]: color (type: Color)
-Function 261: DrawPolyLinesEx() (6 input parameters)
+Function 263: DrawPolyLinesEx() (6 input parameters)
   Name: DrawPolyLinesEx
   Return type: void
   Description: Draw a polygon outline of n sides with extended parameters
@@ -2526,7 +2547,27 @@ Function 261: DrawPolyLinesEx() (6 input parameters)
   Param[4]: rotation (type: float)
   Param[5]: lineThick (type: float)
   Param[6]: color (type: Color)
-Function 262: DrawSplineLinear() (4 input parameters)
+Function 264: DrawStar() (6 input parameters)
+  Name: DrawStar
+  Return type: void
+  Description: Draw a star shape
+  Param[1]: center (type: Vector2)
+  Param[2]: points (type: int)
+  Param[3]: innerRadius (type: float)
+  Param[4]: outerRadius (type: float)
+  Param[5]: rotation (type: float)
+  Param[6]: color (type: Color)
+Function 265: DrawStarLines() (6 input parameters)
+  Name: DrawStarLines
+  Return type: void
+  Description: Draw a star shape outline
+  Param[1]: center (type: Vector2)
+  Param[2]: points (type: int)
+  Param[3]: innerRadius (type: float)
+  Param[4]: outerRadius (type: float)
+  Param[5]: rotation (type: float)
+  Param[6]: color (type: Color)
+Function 266: DrawSplineLinear() (4 input parameters)
   Name: DrawSplineLinear
   Return type: void
   Description: Draw spline: Linear, minimum 2 points
@@ -2534,7 +2575,7 @@ Function 262: DrawSplineLinear() (4 input parameters)
   Param[2]: pointCount (type: int)
   Param[3]: thick (type: float)
   Param[4]: color (type: Color)
-Function 263: DrawSplineBasis() (4 input parameters)
+Function 267: DrawSplineBasis() (4 input parameters)
   Name: DrawSplineBasis
   Return type: void
   Description: Draw spline: B-Spline, minimum 4 points
@@ -2542,7 +2583,7 @@ Function 263: DrawSplineBasis() (4 input parameters)
   Param[2]: pointCount (type: int)
   Param[3]: thick (type: float)
   Param[4]: color (type: Color)
-Function 264: DrawSplineCatmullRom() (4 input parameters)
+Function 268: DrawSplineCatmullRom() (4 input parameters)
   Name: DrawSplineCatmullRom
   Return type: void
   Description: Draw spline: Catmull-Rom, minimum 4 points
@@ -2550,7 +2591,7 @@ Function 264: DrawSplineCatmullRom() (4 input parameters)
   Param[2]: pointCount (type: int)
   Param[3]: thick (type: float)
   Param[4]: color (type: Color)
-Function 265: DrawSplineBezierQuadratic() (4 input parameters)
+Function 269: DrawSplineBezierQuadratic() (4 input parameters)
   Name: DrawSplineBezierQuadratic
   Return type: void
   Description: Draw spline: Quadratic Bezier, minimum 3 points (1 control point): [p1, c2, p3, c4...]
@@ -2558,7 +2599,7 @@ Function 265: DrawSplineBezierQuadratic() (4 input parameters)
   Param[2]: pointCount (type: int)
   Param[3]: thick (type: float)
   Param[4]: color (type: Color)
-Function 266: DrawSplineBezierCubic() (4 input parameters)
+Function 270: DrawSplineBezierCubic() (4 input parameters)
   Name: DrawSplineBezierCubic
   Return type: void
   Description: Draw spline: Cubic Bezier, minimum 4 points (2 control points): [p1, c2, c3, p4, c5, c6...]
@@ -2566,7 +2607,7 @@ Function 266: DrawSplineBezierCubic() (4 input parameters)
   Param[2]: pointCount (type: int)
   Param[3]: thick (type: float)
   Param[4]: color (type: Color)
-Function 267: DrawSplineSegmentLinear() (4 input parameters)
+Function 271: DrawSplineSegmentLinear() (4 input parameters)
   Name: DrawSplineSegmentLinear
   Return type: void
   Description: Draw spline segment: Linear, 2 points
@@ -2574,7 +2615,7 @@ Function 267: DrawSplineSegmentLinear() (4 input parameters)
   Param[2]: p2 (type: Vector2)
   Param[3]: thick (type: float)
   Param[4]: color (type: Color)
-Function 268: DrawSplineSegmentBasis() (6 input parameters)
+Function 272: DrawSplineSegmentBasis() (6 input parameters)
   Name: DrawSplineSegmentBasis
   Return type: void
   Description: Draw spline segment: B-Spline, 4 points
@@ -2584,7 +2625,7 @@ Function 268: DrawSplineSegmentBasis() (6 input parameters)
   Param[4]: p4 (type: Vector2)
   Param[5]: thick (type: float)
   Param[6]: color (type: Color)
-Function 269: DrawSplineSegmentCatmullRom() (6 input parameters)
+Function 273: DrawSplineSegmentCatmullRom() (6 input parameters)
   Name: DrawSplineSegmentCatmullRom
   Return type: void
   Description: Draw spline segment: Catmull-Rom, 4 points
@@ -2594,7 +2635,7 @@ Function 269: DrawSplineSegmentCatmullRom() (6 input parameters)
   Param[4]: p4 (type: Vector2)
   Param[5]: thick (type: float)
   Param[6]: color (type: Color)
-Function 270: DrawSplineSegmentBezierQuadratic() (5 input parameters)
+Function 274: DrawSplineSegmentBezierQuadratic() (5 input parameters)
   Name: DrawSplineSegmentBezierQuadratic
   Return type: void
   Description: Draw spline segment: Quadratic Bezier, 2 points, 1 control point
@@ -2603,7 +2644,7 @@ Function 270: DrawSplineSegmentBezierQuadratic() (5 input parameters)
   Param[3]: p3 (type: Vector2)
   Param[4]: thick (type: float)
   Param[5]: color (type: Color)
-Function 271: DrawSplineSegmentBezierCubic() (6 input parameters)
+Function 275: DrawSplineSegmentBezierCubic() (6 input parameters)
   Name: DrawSplineSegmentBezierCubic
   Return type: void
   Description: Draw spline segment: Cubic Bezier, 2 points, 2 control points
@@ -2613,14 +2654,14 @@ Function 271: DrawSplineSegmentBezierCubic() (6 input parameters)
   Param[4]: p4 (type: Vector2)
   Param[5]: thick (type: float)
   Param[6]: color (type: Color)
-Function 272: GetSplinePointLinear() (3 input parameters)
+Function 276: GetSplinePointLinear() (3 input parameters)
   Name: GetSplinePointLinear
   Return type: Vector2
   Description: Get (evaluate) spline point: Linear
   Param[1]: startPos (type: Vector2)
   Param[2]: endPos (type: Vector2)
   Param[3]: t (type: float)
-Function 273: GetSplinePointBasis() (5 input parameters)
+Function 277: GetSplinePointBasis() (5 input parameters)
   Name: GetSplinePointBasis
   Return type: Vector2
   Description: Get (evaluate) spline point: B-Spline
@@ -2629,7 +2670,7 @@ Function 273: GetSplinePointBasis() (5 input parameters)
   Param[3]: p3 (type: Vector2)
   Param[4]: p4 (type: Vector2)
   Param[5]: t (type: float)
-Function 274: GetSplinePointCatmullRom() (5 input parameters)
+Function 278: GetSplinePointCatmullRom() (5 input parameters)
   Name: GetSplinePointCatmullRom
   Return type: Vector2
   Description: Get (evaluate) spline point: Catmull-Rom
@@ -2638,7 +2679,7 @@ Function 274: GetSplinePointCatmullRom() (5 input parameters)
   Param[3]: p3 (type: Vector2)
   Param[4]: p4 (type: Vector2)
   Param[5]: t (type: float)
-Function 275: GetSplinePointBezierQuad() (4 input parameters)
+Function 279: GetSplinePointBezierQuad() (4 input parameters)
   Name: GetSplinePointBezierQuad
   Return type: Vector2
   Description: Get (evaluate) spline point: Quadratic Bezier
@@ -2646,7 +2687,7 @@ Function 275: GetSplinePointBezierQuad() (4 input parameters)
   Param[2]: c2 (type: Vector2)
   Param[3]: p3 (type: Vector2)
   Param[4]: t (type: float)
-Function 276: GetSplinePointBezierCubic() (5 input parameters)
+Function 280: GetSplinePointBezierCubic() (5 input parameters)
   Name: GetSplinePointBezierCubic
   Return type: Vector2
   Description: Get (evaluate) spline point: Cubic Bezier
@@ -2655,13 +2696,13 @@ Function 276: GetSplinePointBezierCubic() (5 input parameters)
   Param[3]: c3 (type: Vector2)
   Param[4]: p4 (type: Vector2)
   Param[5]: t (type: float)
-Function 277: CheckCollisionRecs() (2 input parameters)
+Function 281: CheckCollisionRecs() (2 input parameters)
   Name: CheckCollisionRecs
   Return type: bool
   Description: Check collision between two rectangles
   Param[1]: rec1 (type: Rectangle)
   Param[2]: rec2 (type: Rectangle)
-Function 278: CheckCollisionCircles() (4 input parameters)
+Function 282: CheckCollisionCircles() (4 input parameters)
   Name: CheckCollisionCircles
   Return type: bool
   Description: Check collision between two circles
@@ -2669,14 +2710,14 @@ Function 278: CheckCollisionCircles() (4 input parameters)
   Param[2]: radius1 (type: float)
   Param[3]: center2 (type: Vector2)
   Param[4]: radius2 (type: float)
-Function 279: CheckCollisionCircleRec() (3 input parameters)
+Function 283: CheckCollisionCircleRec() (3 input parameters)
   Name: CheckCollisionCircleRec
   Return type: bool
   Description: Check collision between circle and rectangle
   Param[1]: center (type: Vector2)
   Param[2]: radius (type: float)
   Param[3]: rec (type: Rectangle)
-Function 280: CheckCollisionCircleLine() (4 input parameters)
+Function 284: CheckCollisionCircleLine() (4 input parameters)
   Name: CheckCollisionCircleLine
   Return type: bool
   Description: Check if circle collides with a line created betweeen two points [p1] and [p2]
@@ -2684,20 +2725,20 @@ Function 280: CheckCollisionCircleLine() (4 input parameters)
   Param[2]: radius (type: float)
   Param[3]: p1 (type: Vector2)
   Param[4]: p2 (type: Vector2)
-Function 281: CheckCollisionPointRec() (2 input parameters)
+Function 285: CheckCollisionPointRec() (2 input parameters)
   Name: CheckCollisionPointRec
   Return type: bool
   Description: Check if point is inside rectangle
   Param[1]: point (type: Vector2)
   Param[2]: rec (type: Rectangle)
-Function 282: CheckCollisionPointCircle() (3 input parameters)
+Function 286: CheckCollisionPointCircle() (3 input parameters)
   Name: CheckCollisionPointCircle
   Return type: bool
   Description: Check if point is inside circle
   Param[1]: point (type: Vector2)
   Param[2]: center (type: Vector2)
   Param[3]: radius (type: float)
-Function 283: CheckCollisionPointTriangle() (4 input parameters)
+Function 287: CheckCollisionPointTriangle() (4 input parameters)
   Name: CheckCollisionPointTriangle
   Return type: bool
   Description: Check if point is inside a triangle
@@ -2705,7 +2746,7 @@ Function 283: CheckCollisionPointTriangle() (4 input parameters)
   Param[2]: p1 (type: Vector2)
   Param[3]: p2 (type: Vector2)
   Param[4]: p3 (type: Vector2)
-Function 284: CheckCollisionPointLine() (4 input parameters)
+Function 288: CheckCollisionPointLine() (4 input parameters)
   Name: CheckCollisionPointLine
   Return type: bool
   Description: Check if point belongs to line created between two points [p1] and [p2] with defined margin in pixels [threshold]
@@ -2713,14 +2754,14 @@ Function 284: CheckCollisionPointLine() (4 input parameters)
   Param[2]: p1 (type: Vector2)
   Param[3]: p2 (type: Vector2)
   Param[4]: threshold (type: int)
-Function 285: CheckCollisionPointPoly() (3 input parameters)
+Function 289: CheckCollisionPointPoly() (3 input parameters)
   Name: CheckCollisionPointPoly
   Return type: bool
   Description: Check if point is within a polygon described by array of vertices
   Param[1]: point (type: Vector2)
   Param[2]: points (type: const Vector2 *)
   Param[3]: pointCount (type: int)
-Function 286: CheckCollisionLines() (5 input parameters)
+Function 290: CheckCollisionLines() (5 input parameters)
   Name: CheckCollisionLines
   Return type: bool
   Description: Check the collision between two lines defined by two points each, returns collision point by reference
@@ -2729,18 +2770,18 @@ Function 286: CheckCollisionLines() (5 input parameters)
   Param[3]: startPos2 (type: Vector2)
   Param[4]: endPos2 (type: Vector2)
   Param[5]: collisionPoint (type: Vector2 *)
-Function 287: GetCollisionRec() (2 input parameters)
+Function 291: GetCollisionRec() (2 input parameters)
   Name: GetCollisionRec
   Return type: Rectangle
   Description: Get collision rectangle for two rectangles collision
   Param[1]: rec1 (type: Rectangle)
   Param[2]: rec2 (type: Rectangle)
-Function 288: LoadImage() (1 input parameters)
+Function 292: LoadImage() (1 input parameters)
   Name: LoadImage
   Return type: Image
   Description: Load image from file into CPU memory (RAM)
   Param[1]: fileName (type: const char *)
-Function 289: LoadImageRaw() (5 input parameters)
+Function 293: LoadImageRaw() (5 input parameters)
   Name: LoadImageRaw
   Return type: Image
   Description: Load image from RAW file data
@@ -2749,13 +2790,13 @@ Function 289: LoadImageRaw() (5 input parameters)
   Param[3]: height (type: int)
   Param[4]: format (type: int)
   Param[5]: headerSize (type: int)
-Function 290: LoadImageAnim() (2 input parameters)
+Function 294: LoadImageAnim() (2 input parameters)
   Name: LoadImageAnim
   Return type: Image
   Description: Load image sequence from file (frames appended to image.data)
   Param[1]: fileName (type: const char *)
   Param[2]: frames (type: int *)
-Function 291: LoadImageAnimFromMemory() (4 input parameters)
+Function 295: LoadImageAnimFromMemory() (4 input parameters)
   Name: LoadImageAnimFromMemory
   Return type: Image
   Description: Load image sequence from memory buffer
@@ -2763,60 +2804,60 @@ Function 291: LoadImageAnimFromMemory() (4 input parameters)
   Param[2]: fileData (type: const unsigned char *)
   Param[3]: dataSize (type: int)
   Param[4]: frames (type: int *)
-Function 292: LoadImageFromMemory() (3 input parameters)
+Function 296: LoadImageFromMemory() (3 input parameters)
   Name: LoadImageFromMemory
   Return type: Image
   Description: Load image from memory buffer, fileType refers to extension: i.e. '.png'
   Param[1]: fileType (type: const char *)
   Param[2]: fileData (type: const unsigned char *)
   Param[3]: dataSize (type: int)
-Function 293: LoadImageFromTexture() (1 input parameters)
+Function 297: LoadImageFromTexture() (1 input parameters)
   Name: LoadImageFromTexture
   Return type: Image
   Description: Load image from GPU texture data
   Param[1]: texture (type: Texture2D)
-Function 294: LoadImageFromScreen() (0 input parameters)
+Function 298: LoadImageFromScreen() (0 input parameters)
   Name: LoadImageFromScreen
   Return type: Image
   Description: Load image from screen buffer and (screenshot)
   No input parameters
-Function 295: IsImageValid() (1 input parameters)
+Function 299: IsImageValid() (1 input parameters)
   Name: IsImageValid
   Return type: bool
   Description: Check if an image is valid (data and parameters)
   Param[1]: image (type: Image)
-Function 296: UnloadImage() (1 input parameters)
+Function 300: UnloadImage() (1 input parameters)
   Name: UnloadImage
   Return type: void
   Description: Unload image from CPU memory (RAM)
   Param[1]: image (type: Image)
-Function 297: ExportImage() (2 input parameters)
+Function 301: ExportImage() (2 input parameters)
   Name: ExportImage
   Return type: bool
   Description: Export image data to file, returns true on success
   Param[1]: image (type: Image)
   Param[2]: fileName (type: const char *)
-Function 298: ExportImageToMemory() (3 input parameters)
+Function 302: ExportImageToMemory() (3 input parameters)
   Name: ExportImageToMemory
   Return type: unsigned char *
   Description: Export image to memory buffer, memory must be MemFree()
   Param[1]: image (type: Image)
   Param[2]: fileType (type: const char *)
   Param[3]: fileSize (type: int *)
-Function 299: ExportImageAsCode() (2 input parameters)
+Function 303: ExportImageAsCode() (2 input parameters)
   Name: ExportImageAsCode
   Return type: bool
   Description: Export image as code file defining an array of bytes, returns true on success
   Param[1]: image (type: Image)
   Param[2]: fileName (type: const char *)
-Function 300: GenImageColor() (3 input parameters)
+Function 304: GenImageColor() (3 input parameters)
   Name: GenImageColor
   Return type: Image
   Description: Generate image: plain color
   Param[1]: width (type: int)
   Param[2]: height (type: int)
   Param[3]: color (type: Color)
-Function 301: GenImageGradientLinear() (5 input parameters)
+Function 305: GenImageGradientLinear() (5 input parameters)
   Name: GenImageGradientLinear
   Return type: Image
   Description: Generate image: linear gradient, direction in degrees [0..360], 0=Vertical gradient
@@ -2825,7 +2866,7 @@ Function 301: GenImageGradientLinear() (5 input parameters)
   Param[3]: direction (type: int)
   Param[4]: start (type: Color)
   Param[5]: end (type: Color)
-Function 302: GenImageGradientRadial() (5 input parameters)
+Function 306: GenImageGradientRadial() (5 input parameters)
   Name: GenImageGradientRadial
   Return type: Image
   Description: Generate image: radial gradient
@@ -2834,7 +2875,7 @@ Function 302: GenImageGradientRadial() (5 input parameters)
   Param[3]: density (type: float)
   Param[4]: inner (type: Color)
   Param[5]: outer (type: Color)
-Function 303: GenImageGradientSquare() (5 input parameters)
+Function 307: GenImageGradientSquare() (5 input parameters)
   Name: GenImageGradientSquare
   Return type: Image
   Description: Generate image: square gradient
@@ -2843,7 +2884,7 @@ Function 303: GenImageGradientSquare() (5 input parameters)
   Param[3]: density (type: float)
   Param[4]: inner (type: Color)
   Param[5]: outer (type: Color)
-Function 304: GenImageChecked() (6 input parameters)
+Function 308: GenImageChecked() (6 input parameters)
   Name: GenImageChecked
   Return type: Image
   Description: Generate image: checked
@@ -2853,14 +2894,14 @@ Function 304: GenImageChecked() (6 input parameters)
   Param[4]: checksY (type: int)
   Param[5]: col1 (type: Color)
   Param[6]: col2 (type: Color)
-Function 305: GenImageWhiteNoise() (3 input parameters)
+Function 309: GenImageWhiteNoise() (3 input parameters)
   Name: GenImageWhiteNoise
   Return type: Image
   Description: Generate image: white noise
   Param[1]: width (type: int)
   Param[2]: height (type: int)
   Param[3]: factor (type: float)
-Function 306: GenImagePerlinNoise() (5 input parameters)
+Function 310: GenImagePerlinNoise() (5 input parameters)
   Name: GenImagePerlinNoise
   Return type: Image
   Description: Generate image: perlin noise
@@ -2869,45 +2910,45 @@ Function 306: GenImagePerlinNoise() (5 input parameters)
   Param[3]: offsetX (type: int)
   Param[4]: offsetY (type: int)
   Param[5]: scale (type: float)
-Function 307: GenImageCellular() (3 input parameters)
+Function 311: GenImageCellular() (3 input parameters)
   Name: GenImageCellular
   Return type: Image
   Description: Generate image: cellular algorithm, bigger tileSize means bigger cells
   Param[1]: width (type: int)
   Param[2]: height (type: int)
   Param[3]: tileSize (type: int)
-Function 308: GenImageText() (3 input parameters)
+Function 312: GenImageText() (3 input parameters)
   Name: GenImageText
   Return type: Image
   Description: Generate image: grayscale image from text data
   Param[1]: width (type: int)
   Param[2]: height (type: int)
   Param[3]: text (type: const char *)
-Function 309: ImageCopy() (1 input parameters)
+Function 313: ImageCopy() (1 input parameters)
   Name: ImageCopy
   Return type: Image
   Description: Create an image duplicate (useful for transformations)
   Param[1]: image (type: Image)
-Function 310: ImageFromImage() (2 input parameters)
+Function 314: ImageFromImage() (2 input parameters)
   Name: ImageFromImage
   Return type: Image
   Description: Create an image from another image piece
   Param[1]: image (type: Image)
   Param[2]: rec (type: Rectangle)
-Function 311: ImageFromChannel() (2 input parameters)
+Function 315: ImageFromChannel() (2 input parameters)
   Name: ImageFromChannel
   Return type: Image
   Description: Create an image from a selected channel of another image (GRAYSCALE)
   Param[1]: image (type: Image)
   Param[2]: selectedChannel (type: int)
-Function 312: ImageText() (3 input parameters)
+Function 316: ImageText() (3 input parameters)
   Name: ImageText
   Return type: Image
   Description: Create an image from text (default font)
   Param[1]: text (type: const char *)
   Param[2]: fontSize (type: int)
   Param[3]: color (type: Color)
-Function 313: ImageTextEx() (5 input parameters)
+Function 317: ImageTextEx() (5 input parameters)
   Name: ImageTextEx
   Return type: Image
   Description: Create an image from text (custom sprite font)
@@ -2916,76 +2957,76 @@ Function 313: ImageTextEx() (5 input parameters)
   Param[3]: fontSize (type: float)
   Param[4]: spacing (type: float)
   Param[5]: tint (type: Color)
-Function 314: ImageFormat() (2 input parameters)
+Function 318: ImageFormat() (2 input parameters)
   Name: ImageFormat
   Return type: void
   Description: Convert image data to desired format
   Param[1]: image (type: Image *)
   Param[2]: newFormat (type: int)
-Function 315: ImageToPOT() (2 input parameters)
+Function 319: ImageToPOT() (2 input parameters)
   Name: ImageToPOT
   Return type: void
   Description: Convert image to POT (power-of-two)
   Param[1]: image (type: Image *)
   Param[2]: fill (type: Color)
-Function 316: ImageCrop() (2 input parameters)
+Function 320: ImageCrop() (2 input parameters)
   Name: ImageCrop
   Return type: void
   Description: Crop an image to a defined rectangle
   Param[1]: image (type: Image *)
   Param[2]: crop (type: Rectangle)
-Function 317: ImageAlphaCrop() (2 input parameters)
+Function 321: ImageAlphaCrop() (2 input parameters)
   Name: ImageAlphaCrop
   Return type: void
   Description: Crop image depending on alpha value
   Param[1]: image (type: Image *)
   Param[2]: threshold (type: float)
-Function 318: ImageAlphaClear() (3 input parameters)
+Function 322: ImageAlphaClear() (3 input parameters)
   Name: ImageAlphaClear
   Return type: void
   Description: Clear alpha channel to desired color
   Param[1]: image (type: Image *)
   Param[2]: color (type: Color)
   Param[3]: threshold (type: float)
-Function 319: ImageAlphaMask() (2 input parameters)
+Function 323: ImageAlphaMask() (2 input parameters)
   Name: ImageAlphaMask
   Return type: void
   Description: Apply alpha mask to image
   Param[1]: image (type: Image *)
   Param[2]: alphaMask (type: Image)
-Function 320: ImageAlphaPremultiply() (1 input parameters)
+Function 324: ImageAlphaPremultiply() (1 input parameters)
   Name: ImageAlphaPremultiply
   Return type: void
   Description: Premultiply alpha channel
   Param[1]: image (type: Image *)
-Function 321: ImageBlurGaussian() (2 input parameters)
+Function 325: ImageBlurGaussian() (2 input parameters)
   Name: ImageBlurGaussian
   Return type: void
   Description: Apply Gaussian blur using a box blur approximation
   Param[1]: image (type: Image *)
   Param[2]: blurSize (type: int)
-Function 322: ImageKernelConvolution() (3 input parameters)
+Function 326: ImageKernelConvolution() (3 input parameters)
   Name: ImageKernelConvolution
   Return type: void
   Description: Apply custom square convolution kernel to image
   Param[1]: image (type: Image *)
   Param[2]: kernel (type: const float *)
   Param[3]: kernelSize (type: int)
-Function 323: ImageResize() (3 input parameters)
+Function 327: ImageResize() (3 input parameters)
   Name: ImageResize
   Return type: void
   Description: Resize image (Bicubic scaling algorithm)
   Param[1]: image (type: Image *)
   Param[2]: newWidth (type: int)
   Param[3]: newHeight (type: int)
-Function 324: ImageResizeNN() (3 input parameters)
+Function 328: ImageResizeNN() (3 input parameters)
   Name: ImageResizeNN
   Return type: void
   Description: Resize image (Nearest-Neighbor scaling algorithm)
   Param[1]: image (type: Image *)
   Param[2]: newWidth (type: int)
   Param[3]: newHeight (type: int)
-Function 325: ImageResizeCanvas() (6 input parameters)
+Function 329: ImageResizeCanvas() (6 input parameters)
   Name: ImageResizeCanvas
   Return type: void
   Description: Resize canvas and fill with color
@@ -2995,12 +3036,12 @@ Function 325: ImageResizeCanvas() (6 input parameters)
   Param[4]: offsetX (type: int)
   Param[5]: offsetY (type: int)
   Param[6]: fill (type: Color)
-Function 326: ImageMipmaps() (1 input parameters)
+Function 330: ImageMipmaps() (1 input parameters)
   Name: ImageMipmaps
   Return type: void
   Description: Compute all mipmap levels for a provided image
   Param[1]: image (type: Image *)
-Function 327: ImageDither() (5 input parameters)
+Function 331: ImageDither() (5 input parameters)
   Name: ImageDither
   Return type: void
   Description: Dither image data to 16bpp or lower (Floyd-Steinberg dithering)
@@ -3009,109 +3050,109 @@ Function 327: ImageDither() (5 input parameters)
   Param[3]: gBpp (type: int)
   Param[4]: bBpp (type: int)
   Param[5]: aBpp (type: int)
-Function 328: ImageFlipVertical() (1 input parameters)
+Function 332: ImageFlipVertical() (1 input parameters)
   Name: ImageFlipVertical
   Return type: void
   Description: Flip image vertically
   Param[1]: image (type: Image *)
-Function 329: ImageFlipHorizontal() (1 input parameters)
+Function 333: ImageFlipHorizontal() (1 input parameters)
   Name: ImageFlipHorizontal
   Return type: void
   Description: Flip image horizontally
   Param[1]: image (type: Image *)
-Function 330: ImageRotate() (2 input parameters)
+Function 334: ImageRotate() (2 input parameters)
   Name: ImageRotate
   Return type: void
   Description: Rotate image by input angle in degrees (-359 to 359)
   Param[1]: image (type: Image *)
   Param[2]: degrees (type: int)
-Function 331: ImageRotateCW() (1 input parameters)
+Function 335: ImageRotateCW() (1 input parameters)
   Name: ImageRotateCW
   Return type: void
   Description: Rotate image clockwise 90deg
   Param[1]: image (type: Image *)
-Function 332: ImageRotateCCW() (1 input parameters)
+Function 336: ImageRotateCCW() (1 input parameters)
   Name: ImageRotateCCW
   Return type: void
   Description: Rotate image counter-clockwise 90deg
   Param[1]: image (type: Image *)
-Function 333: ImageColorTint() (2 input parameters)
+Function 337: ImageColorTint() (2 input parameters)
   Name: ImageColorTint
   Return type: void
   Description: Modify image color: tint
   Param[1]: image (type: Image *)
   Param[2]: color (type: Color)
-Function 334: ImageColorInvert() (1 input parameters)
+Function 338: ImageColorInvert() (1 input parameters)
   Name: ImageColorInvert
   Return type: void
   Description: Modify image color: invert
   Param[1]: image (type: Image *)
-Function 335: ImageColorGrayscale() (1 input parameters)
+Function 339: ImageColorGrayscale() (1 input parameters)
   Name: ImageColorGrayscale
   Return type: void
   Description: Modify image color: grayscale
   Param[1]: image (type: Image *)
-Function 336: ImageColorContrast() (2 input parameters)
+Function 340: ImageColorContrast() (2 input parameters)
   Name: ImageColorContrast
   Return type: void
   Description: Modify image color: contrast (-100 to 100)
   Param[1]: image (type: Image *)
   Param[2]: contrast (type: float)
-Function 337: ImageColorBrightness() (2 input parameters)
+Function 341: ImageColorBrightness() (2 input parameters)
   Name: ImageColorBrightness
   Return type: void
   Description: Modify image color: brightness (-255 to 255)
   Param[1]: image (type: Image *)
   Param[2]: brightness (type: int)
-Function 338: ImageColorReplace() (3 input parameters)
+Function 342: ImageColorReplace() (3 input parameters)
   Name: ImageColorReplace
   Return type: void
   Description: Modify image color: replace color
   Param[1]: image (type: Image *)
   Param[2]: color (type: Color)
   Param[3]: replace (type: Color)
-Function 339: LoadImageColors() (1 input parameters)
+Function 343: LoadImageColors() (1 input parameters)
   Name: LoadImageColors
   Return type: Color *
   Description: Load color data from image as a Color array (RGBA - 32bit)
   Param[1]: image (type: Image)
-Function 340: LoadImagePalette() (3 input parameters)
+Function 344: LoadImagePalette() (3 input parameters)
   Name: LoadImagePalette
   Return type: Color *
   Description: Load colors palette from image as a Color array (RGBA - 32bit)
   Param[1]: image (type: Image)
   Param[2]: maxPaletteSize (type: int)
   Param[3]: colorCount (type: int *)
-Function 341: UnloadImageColors() (1 input parameters)
+Function 345: UnloadImageColors() (1 input parameters)
   Name: UnloadImageColors
   Return type: void
   Description: Unload color data loaded with LoadImageColors()
   Param[1]: colors (type: Color *)
-Function 342: UnloadImagePalette() (1 input parameters)
+Function 346: UnloadImagePalette() (1 input parameters)
   Name: UnloadImagePalette
   Return type: void
   Description: Unload colors palette loaded with LoadImagePalette()
   Param[1]: colors (type: Color *)
-Function 343: GetImageAlphaBorder() (2 input parameters)
+Function 347: GetImageAlphaBorder() (2 input parameters)
   Name: GetImageAlphaBorder
   Return type: Rectangle
   Description: Get image alpha border rectangle
   Param[1]: image (type: Image)
   Param[2]: threshold (type: float)
-Function 344: GetImageColor() (3 input parameters)
+Function 348: GetImageColor() (3 input parameters)
   Name: GetImageColor
   Return type: Color
   Description: Get image pixel color at (x, y) position
   Param[1]: image (type: Image)
   Param[2]: x (type: int)
   Param[3]: y (type: int)
-Function 345: ImageClearBackground() (2 input parameters)
+Function 349: ImageClearBackground() (2 input parameters)
   Name: ImageClearBackground
   Return type: void
   Description: Clear image background with given color
   Param[1]: dst (type: Image *)
   Param[2]: color (type: Color)
-Function 346: ImageDrawPixel() (4 input parameters)
+Function 350: ImageDrawPixel() (4 input parameters)
   Name: ImageDrawPixel
   Return type: void
   Description: Draw pixel within an image
@@ -3119,14 +3160,14 @@ Function 346: ImageDrawPixel() (4 input parameters)
   Param[2]: posX (type: int)
   Param[3]: posY (type: int)
   Param[4]: color (type: Color)
-Function 347: ImageDrawPixelV() (3 input parameters)
+Function 351: ImageDrawPixelV() (3 input parameters)
   Name: ImageDrawPixelV
   Return type: void
   Description: Draw pixel within an image (Vector version)
   Param[1]: dst (type: Image *)
   Param[2]: position (type: Vector2)
   Param[3]: color (type: Color)
-Function 348: ImageDrawLine() (6 input parameters)
+Function 352: ImageDrawLine() (6 input parameters)
   Name: ImageDrawLine
   Return type: void
   Description: Draw line within an image
@@ -3136,7 +3177,7 @@ Function 348: ImageDrawLine() (6 input parameters)
   Param[4]: endPosX (type: int)
   Param[5]: endPosY (type: int)
   Param[6]: color (type: Color)
-Function 349: ImageDrawLineV() (4 input parameters)
+Function 353: ImageDrawLineV() (4 input parameters)
   Name: ImageDrawLineV
   Return type: void
   Description: Draw line within an image (Vector version)
@@ -3144,7 +3185,7 @@ Function 349: ImageDrawLineV() (4 input parameters)
   Param[2]: start (type: Vector2)
   Param[3]: end (type: Vector2)
   Param[4]: color (type: Color)
-Function 350: ImageDrawLineEx() (5 input parameters)
+Function 354: ImageDrawLineEx() (5 input parameters)
   Name: ImageDrawLineEx
   Return type: void
   Description: Draw a line defining thickness within an image
@@ -3153,7 +3194,7 @@ Function 350: ImageDrawLineEx() (5 input parameters)
   Param[3]: end (type: Vector2)
   Param[4]: thick (type: int)
   Param[5]: color (type: Color)
-Function 351: ImageDrawCircle() (5 input parameters)
+Function 355: ImageDrawCircle() (5 input parameters)
   Name: ImageDrawCircle
   Return type: void
   Description: Draw a filled circle within an image
@@ -3162,7 +3203,7 @@ Function 351: ImageDrawCircle() (5 input parameters)
   Param[3]: centerY (type: int)
   Param[4]: radius (type: int)
   Param[5]: color (type: Color)
-Function 352: ImageDrawCircleV() (4 input parameters)
+Function 356: ImageDrawCircleV() (4 input parameters)
   Name: ImageDrawCircleV
   Return type: void
   Description: Draw a filled circle within an image (Vector version)
@@ -3170,7 +3211,7 @@ Function 352: ImageDrawCircleV() (4 input parameters)
   Param[2]: center (type: Vector2)
   Param[3]: radius (type: int)
   Param[4]: color (type: Color)
-Function 353: ImageDrawCircleLines() (5 input parameters)
+Function 357: ImageDrawCircleLines() (5 input parameters)
   Name: ImageDrawCircleLines
   Return type: void
   Description: Draw circle outline within an image
@@ -3179,7 +3220,7 @@ Function 353: ImageDrawCircleLines() (5 input parameters)
   Param[3]: centerY (type: int)
   Param[4]: radius (type: int)
   Param[5]: color (type: Color)
-Function 354: ImageDrawCircleLinesV() (4 input parameters)
+Function 358: ImageDrawCircleLinesV() (4 input parameters)
   Name: ImageDrawCircleLinesV
   Return type: void
   Description: Draw circle outline within an image (Vector version)
@@ -3187,7 +3228,7 @@ Function 354: ImageDrawCircleLinesV() (4 input parameters)
   Param[2]: center (type: Vector2)
   Param[3]: radius (type: int)
   Param[4]: color (type: Color)
-Function 355: ImageDrawRectangle() (6 input parameters)
+Function 359: ImageDrawRectangle() (6 input parameters)
   Name: ImageDrawRectangle
   Return type: void
   Description: Draw rectangle within an image
@@ -3197,7 +3238,7 @@ Function 355: ImageDrawRectangle() (6 input parameters)
   Param[4]: width (type: int)
   Param[5]: height (type: int)
   Param[6]: color (type: Color)
-Function 356: ImageDrawRectangleV() (4 input parameters)
+Function 360: ImageDrawRectangleV() (4 input parameters)
   Name: ImageDrawRectangleV
   Return type: void
   Description: Draw rectangle within an image (Vector version)
@@ -3205,14 +3246,14 @@ Function 356: ImageDrawRectangleV() (4 input parameters)
   Param[2]: position (type: Vector2)
   Param[3]: size (type: Vector2)
   Param[4]: color (type: Color)
-Function 357: ImageDrawRectangleRec() (3 input parameters)
+Function 361: ImageDrawRectangleRec() (3 input parameters)
   Name: ImageDrawRectangleRec
   Return type: void
   Description: Draw rectangle within an image
   Param[1]: dst (type: Image *)
   Param[2]: rec (type: Rectangle)
   Param[3]: color (type: Color)
-Function 358: ImageDrawRectangleLines() (4 input parameters)
+Function 362: ImageDrawRectangleLines() (4 input parameters)
   Name: ImageDrawRectangleLines
   Return type: void
   Description: Draw rectangle lines within an image
@@ -3220,7 +3261,7 @@ Function 358: ImageDrawRectangleLines() (4 input parameters)
   Param[2]: rec (type: Rectangle)
   Param[3]: thick (type: int)
   Param[4]: color (type: Color)
-Function 359: ImageDrawTriangle() (5 input parameters)
+Function 363: ImageDrawTriangle() (5 input parameters)
   Name: ImageDrawTriangle
   Return type: void
   Description: Draw triangle within an image
@@ -3229,7 +3270,7 @@ Function 359: ImageDrawTriangle() (5 input parameters)
   Param[3]: v2 (type: Vector2)
   Param[4]: v3 (type: Vector2)
   Param[5]: color (type: Color)
-Function 360: ImageDrawTriangleEx() (7 input parameters)
+Function 364: ImageDrawTriangleEx() (7 input parameters)
   Name: ImageDrawTriangleEx
   Return type: void
   Description: Draw triangle with interpolated colors within an image
@@ -3240,7 +3281,7 @@ Function 360: ImageDrawTriangleEx() (7 input parameters)
   Param[5]: c1 (type: Color)
   Param[6]: c2 (type: Color)
   Param[7]: c3 (type: Color)
-Function 361: ImageDrawTriangleLines() (5 input parameters)
+Function 365: ImageDrawTriangleLines() (5 input parameters)
   Name: ImageDrawTriangleLines
   Return type: void
   Description: Draw triangle outline within an image
@@ -3249,7 +3290,7 @@ Function 361: ImageDrawTriangleLines() (5 input parameters)
   Param[3]: v2 (type: Vector2)
   Param[4]: v3 (type: Vector2)
   Param[5]: color (type: Color)
-Function 362: ImageDrawTriangleFan() (4 input parameters)
+Function 366: ImageDrawTriangleFan() (4 input parameters)
   Name: ImageDrawTriangleFan
   Return type: void
   Description: Draw a triangle fan defined by points within an image (first vertex is the center)
@@ -3257,7 +3298,7 @@ Function 362: ImageDrawTriangleFan() (4 input parameters)
   Param[2]: points (type: const Vector2 *)
   Param[3]: pointCount (type: int)
   Param[4]: color (type: Color)
-Function 363: ImageDrawTriangleStrip() (4 input parameters)
+Function 367: ImageDrawTriangleStrip() (4 input parameters)
   Name: ImageDrawTriangleStrip
   Return type: void
   Description: Draw a triangle strip defined by points within an image
@@ -3265,7 +3306,7 @@ Function 363: ImageDrawTriangleStrip() (4 input parameters)
   Param[2]: points (type: const Vector2 *)
   Param[3]: pointCount (type: int)
   Param[4]: color (type: Color)
-Function 364: ImageDraw() (5 input parameters)
+Function 368: ImageDraw() (5 input parameters)
   Name: ImageDraw
   Return type: void
   Description: Draw a source image within a destination image (tint applied to source)
@@ -3274,7 +3315,7 @@ Function 364: ImageDraw() (5 input parameters)
   Param[3]: srcRec (type: Rectangle)
   Param[4]: dstRec (type: Rectangle)
   Param[5]: tint (type: Color)
-Function 365: ImageDrawText() (6 input parameters)
+Function 369: ImageDrawText() (6 input parameters)
   Name: ImageDrawText
   Return type: void
   Description: Draw text (using default font) within an image (destination)
@@ -3284,7 +3325,7 @@ Function 365: ImageDrawText() (6 input parameters)
   Param[4]: posY (type: int)
   Param[5]: fontSize (type: int)
   Param[6]: color (type: Color)
-Function 366: ImageDrawTextEx() (7 input parameters)
+Function 370: ImageDrawTextEx() (7 input parameters)
   Name: ImageDrawTextEx
   Return type: void
   Description: Draw text (custom sprite font) within an image (destination)
@@ -3295,79 +3336,79 @@ Function 366: ImageDrawTextEx() (7 input parameters)
   Param[5]: fontSize (type: float)
   Param[6]: spacing (type: float)
   Param[7]: tint (type: Color)
-Function 367: LoadTexture() (1 input parameters)
+Function 371: LoadTexture() (1 input parameters)
   Name: LoadTexture
   Return type: Texture2D
   Description: Load texture from file into GPU memory (VRAM)
   Param[1]: fileName (type: const char *)
-Function 368: LoadTextureFromImage() (1 input parameters)
+Function 372: LoadTextureFromImage() (1 input parameters)
   Name: LoadTextureFromImage
   Return type: Texture2D
   Description: Load texture from image data
   Param[1]: image (type: Image)
-Function 369: LoadTextureCubemap() (2 input parameters)
+Function 373: LoadTextureCubemap() (2 input parameters)
   Name: LoadTextureCubemap
   Return type: TextureCubemap
   Description: Load cubemap from image, multiple image cubemap layouts supported
   Param[1]: image (type: Image)
   Param[2]: layout (type: int)
-Function 370: LoadRenderTexture() (2 input parameters)
+Function 374: LoadRenderTexture() (2 input parameters)
   Name: LoadRenderTexture
   Return type: RenderTexture2D
   Description: Load texture for rendering (framebuffer)
   Param[1]: width (type: int)
   Param[2]: height (type: int)
-Function 371: IsTextureValid() (1 input parameters)
+Function 375: IsTextureValid() (1 input parameters)
   Name: IsTextureValid
   Return type: bool
   Description: Check if a texture is valid (loaded in GPU)
   Param[1]: texture (type: Texture2D)
-Function 372: UnloadTexture() (1 input parameters)
+Function 376: UnloadTexture() (1 input parameters)
   Name: UnloadTexture
   Return type: void
   Description: Unload texture from GPU memory (VRAM)
   Param[1]: texture (type: Texture2D)
-Function 373: IsRenderTextureValid() (1 input parameters)
+Function 377: IsRenderTextureValid() (1 input parameters)
   Name: IsRenderTextureValid
   Return type: bool
   Description: Check if a render texture is valid (loaded in GPU)
   Param[1]: target (type: RenderTexture2D)
-Function 374: UnloadRenderTexture() (1 input parameters)
+Function 378: UnloadRenderTexture() (1 input parameters)
   Name: UnloadRenderTexture
   Return type: void
   Description: Unload render texture from GPU memory (VRAM)
   Param[1]: target (type: RenderTexture2D)
-Function 375: UpdateTexture() (2 input parameters)
+Function 379: UpdateTexture() (2 input parameters)
   Name: UpdateTexture
   Return type: void
   Description: Update GPU texture with new data (pixels should be able to fill texture)
   Param[1]: texture (type: Texture2D)
   Param[2]: pixels (type: const void *)
-Function 376: UpdateTextureRec() (3 input parameters)
+Function 380: UpdateTextureRec() (3 input parameters)
   Name: UpdateTextureRec
   Return type: void
   Description: Update GPU texture rectangle with new data (pixels and rec should fit in texture)
   Param[1]: texture (type: Texture2D)
   Param[2]: rec (type: Rectangle)
   Param[3]: pixels (type: const void *)
-Function 377: GenTextureMipmaps() (1 input parameters)
+Function 381: GenTextureMipmaps() (1 input parameters)
   Name: GenTextureMipmaps
   Return type: void
   Description: Generate GPU mipmaps for a texture
   Param[1]: texture (type: Texture2D *)
-Function 378: SetTextureFilter() (2 input parameters)
+Function 382: SetTextureFilter() (2 input parameters)
   Name: SetTextureFilter
   Return type: void
   Description: Set texture scaling filter mode
   Param[1]: texture (type: Texture2D)
   Param[2]: filter (type: int)
-Function 379: SetTextureWrap() (2 input parameters)
+Function 383: SetTextureWrap() (2 input parameters)
   Name: SetTextureWrap
   Return type: void
   Description: Set texture wrapping mode
   Param[1]: texture (type: Texture2D)
   Param[2]: wrap (type: int)
-Function 380: DrawTexture() (4 input parameters)
+Function 384: DrawTexture() (4 input parameters)
   Name: DrawTexture
   Return type: void
   Description: Draw a Texture2D
@@ -3375,14 +3416,14 @@ Function 380: DrawTexture() (4 input parameters)
   Param[2]: posX (type: int)
   Param[3]: posY (type: int)
   Param[4]: tint (type: Color)
-Function 381: DrawTextureV() (3 input parameters)
+Function 385: DrawTextureV() (3 input parameters)
   Name: DrawTextureV
   Return type: void
   Description: Draw a Texture2D with position defined as Vector2
   Param[1]: texture (type: Texture2D)
   Param[2]: position (type: Vector2)
   Param[3]: tint (type: Color)
-Function 382: DrawTextureEx() (5 input parameters)
+Function 386: DrawTextureEx() (5 input parameters)
   Name: DrawTextureEx
   Return type: void
   Description: Draw a Texture2D with extended parameters
@@ -3391,7 +3432,7 @@ Function 382: DrawTextureEx() (5 input parameters)
   Param[3]: rotation (type: float)
   Param[4]: scale (type: float)
   Param[5]: tint (type: Color)
-Function 383: DrawTextureRec() (4 input parameters)
+Function 387: DrawTextureRec() (4 input parameters)
   Name: DrawTextureRec
   Return type: void
   Description: Draw a part of a texture defined by a rectangle
@@ -3399,7 +3440,7 @@ Function 383: DrawTextureRec() (4 input parameters)
   Param[2]: source (type: Rectangle)
   Param[3]: position (type: Vector2)
   Param[4]: tint (type: Color)
-Function 384: DrawTexturePro() (6 input parameters)
+Function 388: DrawTexturePro() (6 input parameters)
   Name: DrawTexturePro
   Return type: void
   Description: Draw a part of a texture defined by a rectangle with 'pro' parameters
@@ -3409,7 +3450,7 @@ Function 384: DrawTexturePro() (6 input parameters)
   Param[4]: origin (type: Vector2)
   Param[5]: rotation (type: float)
   Param[6]: tint (type: Color)
-Function 385: DrawTextureNPatch() (6 input parameters)
+Function 389: DrawTextureNPatch() (6 input parameters)
   Name: DrawTextureNPatch
   Return type: void
   Description: Draws a texture (or part of it) that stretches or shrinks nicely
@@ -3419,119 +3460,119 @@ Function 385: DrawTextureNPatch() (6 input parameters)
   Param[4]: origin (type: Vector2)
   Param[5]: rotation (type: float)
   Param[6]: tint (type: Color)
-Function 386: ColorIsEqual() (2 input parameters)
+Function 390: ColorIsEqual() (2 input parameters)
   Name: ColorIsEqual
   Return type: bool
   Description: Check if two colors are equal
   Param[1]: col1 (type: Color)
   Param[2]: col2 (type: Color)
-Function 387: Fade() (2 input parameters)
+Function 391: Fade() (2 input parameters)
   Name: Fade
   Return type: Color
   Description: Get color with alpha applied, alpha goes from 0.0f to 1.0f
   Param[1]: color (type: Color)
   Param[2]: alpha (type: float)
-Function 388: ColorToInt() (1 input parameters)
+Function 392: ColorToInt() (1 input parameters)
   Name: ColorToInt
   Return type: int
   Description: Get hexadecimal value for a Color (0xRRGGBBAA)
   Param[1]: color (type: Color)
-Function 389: ColorNormalize() (1 input parameters)
+Function 393: ColorNormalize() (1 input parameters)
   Name: ColorNormalize
   Return type: Vector4
   Description: Get Color normalized as float [0..1]
   Param[1]: color (type: Color)
-Function 390: ColorFromNormalized() (1 input parameters)
+Function 394: ColorFromNormalized() (1 input parameters)
   Name: ColorFromNormalized
   Return type: Color
   Description: Get Color from normalized values [0..1]
   Param[1]: normalized (type: Vector4)
-Function 391: ColorToHSV() (1 input parameters)
+Function 395: ColorToHSV() (1 input parameters)
   Name: ColorToHSV
   Return type: Vector3
   Description: Get HSV values for a Color, hue [0..360], saturation/value [0..1]
   Param[1]: color (type: Color)
-Function 392: ColorFromHSV() (3 input parameters)
+Function 396: ColorFromHSV() (3 input parameters)
   Name: ColorFromHSV
   Return type: Color
   Description: Get a Color from HSV values, hue [0..360], saturation/value [0..1]
   Param[1]: hue (type: float)
   Param[2]: saturation (type: float)
   Param[3]: value (type: float)
-Function 393: ColorTint() (2 input parameters)
+Function 397: ColorTint() (2 input parameters)
   Name: ColorTint
   Return type: Color
   Description: Get color multiplied with another color
   Param[1]: color (type: Color)
   Param[2]: tint (type: Color)
-Function 394: ColorBrightness() (2 input parameters)
+Function 398: ColorBrightness() (2 input parameters)
   Name: ColorBrightness
   Return type: Color
   Description: Get color with brightness correction, brightness factor goes from -1.0f to 1.0f
   Param[1]: color (type: Color)
   Param[2]: factor (type: float)
-Function 395: ColorContrast() (2 input parameters)
+Function 399: ColorContrast() (2 input parameters)
   Name: ColorContrast
   Return type: Color
   Description: Get color with contrast correction, contrast values between -1.0f and 1.0f
   Param[1]: color (type: Color)
   Param[2]: contrast (type: float)
-Function 396: ColorAlpha() (2 input parameters)
+Function 400: ColorAlpha() (2 input parameters)
   Name: ColorAlpha
   Return type: Color
   Description: Get color with alpha applied, alpha goes from 0.0f to 1.0f
   Param[1]: color (type: Color)
   Param[2]: alpha (type: float)
-Function 397: ColorAlphaBlend() (3 input parameters)
+Function 401: ColorAlphaBlend() (3 input parameters)
   Name: ColorAlphaBlend
   Return type: Color
   Description: Get src alpha-blended into dst color with tint
   Param[1]: dst (type: Color)
   Param[2]: src (type: Color)
   Param[3]: tint (type: Color)
-Function 398: ColorLerp() (3 input parameters)
+Function 402: ColorLerp() (3 input parameters)
   Name: ColorLerp
   Return type: Color
   Description: Get color lerp interpolation between two colors, factor [0.0f..1.0f]
   Param[1]: color1 (type: Color)
   Param[2]: color2 (type: Color)
   Param[3]: factor (type: float)
-Function 399: GetColor() (1 input parameters)
+Function 403: GetColor() (1 input parameters)
   Name: GetColor
   Return type: Color
   Description: Get Color structure from hexadecimal value
   Param[1]: hexValue (type: unsigned int)
-Function 400: GetPixelColor() (2 input parameters)
+Function 404: GetPixelColor() (2 input parameters)
   Name: GetPixelColor
   Return type: Color
   Description: Get Color from a source pixel pointer of certain format
   Param[1]: srcPtr (type: void *)
   Param[2]: format (type: int)
-Function 401: SetPixelColor() (3 input parameters)
+Function 405: SetPixelColor() (3 input parameters)
   Name: SetPixelColor
   Return type: void
   Description: Set color formatted into destination pixel pointer
   Param[1]: dstPtr (type: void *)
   Param[2]: color (type: Color)
   Param[3]: format (type: int)
-Function 402: GetPixelDataSize() (3 input parameters)
+Function 406: GetPixelDataSize() (3 input parameters)
   Name: GetPixelDataSize
   Return type: int
   Description: Get pixel data size in bytes for certain format
   Param[1]: width (type: int)
   Param[2]: height (type: int)
   Param[3]: format (type: int)
-Function 403: GetFontDefault() (0 input parameters)
+Function 407: GetFontDefault() (0 input parameters)
   Name: GetFontDefault
   Return type: Font
   Description: Get the default Font
   No input parameters
-Function 404: LoadFont() (1 input parameters)
+Function 408: LoadFont() (1 input parameters)
   Name: LoadFont
   Return type: Font
   Description: Load font from file into GPU memory (VRAM)
   Param[1]: fileName (type: const char *)
-Function 405: LoadFontEx() (4 input parameters)
+Function 409: LoadFontEx() (4 input parameters)
   Name: LoadFontEx
   Return type: Font
   Description: Load font from file with extended parameters, use NULL for codepoints and 0 for codepointCount to load the default character set, font size is provided in pixels height
@@ -3539,14 +3580,14 @@ Function 405: LoadFontEx() (4 input parameters)
   Param[2]: fontSize (type: int)
   Param[3]: codepoints (type: const int *)
   Param[4]: codepointCount (type: int)
-Function 406: LoadFontFromImage() (3 input parameters)
+Function 410: LoadFontFromImage() (3 input parameters)
   Name: LoadFontFromImage
   Return type: Font
   Description: Load font from Image (XNA style)
   Param[1]: image (type: Image)
   Param[2]: key (type: Color)
   Param[3]: firstChar (type: int)
-Function 407: LoadFontFromMemory() (6 input parameters)
+Function 411: LoadFontFromMemory() (6 input parameters)
   Name: LoadFontFromMemory
   Return type: Font
   Description: Load font from memory buffer, fileType refers to extension: i.e. '.ttf'
@@ -3556,12 +3597,12 @@ Function 407: LoadFontFromMemory() (6 input parameters)
   Param[4]: fontSize (type: int)
   Param[5]: codepoints (type: const int *)
   Param[6]: codepointCount (type: int)
-Function 408: IsFontValid() (1 input parameters)
+Function 412: IsFontValid() (1 input parameters)
   Name: IsFontValid
   Return type: bool
   Description: Check if a font is valid (font data loaded, WARNING: GPU texture not checked)
   Param[1]: font (type: Font)
-Function 409: LoadFontData() (7 input parameters)
+Function 413: LoadFontData() (7 input parameters)
   Name: LoadFontData
   Return type: GlyphInfo *
   Description: Load font data for further use
@@ -3572,7 +3613,7 @@ Function 409: LoadFontData() (7 input parameters)
   Param[5]: codepointCount (type: int)
   Param[6]: type (type: int)
   Param[7]: glyphCount (type: int *)
-Function 410: GenImageFontAtlas() (6 input parameters)
+Function 414: GenImageFontAtlas() (6 input parameters)
   Name: GenImageFontAtlas
   Return type: Image
   Description: Generate image font atlas using chars info
@@ -3582,30 +3623,30 @@ Function 410: GenImageFontAtlas() (6 input parameters)
   Param[4]: fontSize (type: int)
   Param[5]: padding (type: int)
   Param[6]: packMethod (type: int)
-Function 411: UnloadFontData() (2 input parameters)
+Function 415: UnloadFontData() (2 input parameters)
   Name: UnloadFontData
   Return type: void
   Description: Unload font chars info data (RAM)
   Param[1]: glyphs (type: GlyphInfo *)
   Param[2]: glyphCount (type: int)
-Function 412: UnloadFont() (1 input parameters)
+Function 416: UnloadFont() (1 input parameters)
   Name: UnloadFont
   Return type: void
   Description: Unload font from GPU memory (VRAM)
   Param[1]: font (type: Font)
-Function 413: ExportFontAsCode() (2 input parameters)
+Function 417: ExportFontAsCode() (2 input parameters)
   Name: ExportFontAsCode
   Return type: bool
   Description: Export font as code file, returns true on success
   Param[1]: font (type: Font)
   Param[2]: fileName (type: const char *)
-Function 414: DrawFPS() (2 input parameters)
+Function 418: DrawFPS() (2 input parameters)
   Name: DrawFPS
   Return type: void
   Description: Draw current FPS
   Param[1]: posX (type: int)
   Param[2]: posY (type: int)
-Function 415: DrawText() (5 input parameters)
+Function 419: DrawText() (5 input parameters)
   Name: DrawText
   Return type: void
   Description: Draw text (using default font)
@@ -3614,7 +3655,7 @@ Function 415: DrawText() (5 input parameters)
   Param[3]: posY (type: int)
   Param[4]: fontSize (type: int)
   Param[5]: color (type: Color)
-Function 416: DrawTextEx() (6 input parameters)
+Function 420: DrawTextEx() (6 input parameters)
   Name: DrawTextEx
   Return type: void
   Description: Draw text using font and additional parameters
@@ -3624,7 +3665,7 @@ Function 416: DrawTextEx() (6 input parameters)
   Param[4]: fontSize (type: float)
   Param[5]: spacing (type: float)
   Param[6]: tint (type: Color)
-Function 417: DrawTextPro() (8 input parameters)
+Function 421: DrawTextPro() (8 input parameters)
   Name: DrawTextPro
   Return type: void
   Description: Draw text using Font and pro parameters (rotation)
@@ -3636,7 +3677,7 @@ Function 417: DrawTextPro() (8 input parameters)
   Param[6]: fontSize (type: float)
   Param[7]: spacing (type: float)
   Param[8]: tint (type: Color)
-Function 418: DrawTextCodepoint() (5 input parameters)
+Function 422: DrawTextCodepoint() (5 input parameters)
   Name: DrawTextCodepoint
   Return type: void
   Description: Draw one character (codepoint)
@@ -3645,7 +3686,7 @@ Function 418: DrawTextCodepoint() (5 input parameters)
   Param[3]: position (type: Vector2)
   Param[4]: fontSize (type: float)
   Param[5]: tint (type: Color)
-Function 419: DrawTextCodepoints() (7 input parameters)
+Function 423: DrawTextCodepoints() (7 input parameters)
   Name: DrawTextCodepoints
   Return type: void
   Description: Draw multiple character (codepoint)
@@ -3656,13 +3697,13 @@ Function 419: DrawTextCodepoints() (7 input parameters)
   Param[5]: fontSize (type: float)
   Param[6]: spacing (type: float)
   Param[7]: tint (type: Color)
-Function 420: LoadFontShaper() (2 input parameters)
+Function 424: LoadFontShaper() (2 input parameters)
   Name: LoadFontShaper
   Return type: FontShaper *
   Description: Load a FontShaper from a TTF/OTF file at the given base pixel size
   Param[1]: fileName (type: const char *)
   Param[2]: fontSize (type: int)
-Function 421: LoadFontShaperFromMemory() (4 input parameters)
+Function 425: LoadFontShaperFromMemory() (4 input parameters)
   Name: LoadFontShaperFromMemory
   Return type: FontShaper *
   Description: Load a FontShaper from font data in memory
@@ -3670,17 +3711,17 @@ Function 421: LoadFontShaperFromMemory() (4 input parameters)
   Param[2]: fileData (type: const unsigned char *)
   Param[3]: dataSize (type: int)
   Param[4]: fontSize (type: int)
-Function 422: IsFontShaperValid() (1 input parameters)
+Function 426: IsFontShaperValid() (1 input parameters)
   Name: IsFontShaperValid
   Return type: bool
   Description: Check if a FontShaper is valid (data loaded)
   Param[1]: shaper (type: const FontShaper *)
-Function 423: UnloadFontShaper() (1 input parameters)
+Function 427: UnloadFontShaper() (1 input parameters)
   Name: UnloadFontShaper
   Return type: void
   Description: Unload FontShaper from memory and GPU
   Param[1]: shaper (type: FontShaper *)
-Function 424: DrawTextShaped() (6 input parameters)
+Function 428: DrawTextShaped() (6 input parameters)
   Name: DrawTextShaped
   Return type: void
   Description: Draw shaped text (uses HarfBuzz for shaping: joining, RTL, ligatures)
@@ -3690,7 +3731,7 @@ Function 424: DrawTextShaped() (6 input parameters)
   Param[4]: fontSize (type: float)
   Param[5]: spacing (type: float)
   Param[6]: tint (type: Color)
-Function 425: MeasureTextShaped() (4 input parameters)
+Function 429: MeasureTextShaped() (4 input parameters)
   Name: MeasureTextShaped
   Return type: Vector2
   Description: Measure shaped text size
@@ -3698,18 +3739,18 @@ Function 425: MeasureTextShaped() (4 input parameters)
   Param[2]: text (type: const char *)
   Param[3]: fontSize (type: float)
   Param[4]: spacing (type: float)
-Function 426: SetTextLineSpacing() (1 input parameters)
+Function 430: SetTextLineSpacing() (1 input parameters)
   Name: SetTextLineSpacing
   Return type: void
   Description: Set vertical line spacing when drawing with line-breaks
   Param[1]: spacing (type: int)
-Function 427: MeasureText() (2 input parameters)
+Function 431: MeasureText() (2 input parameters)
   Name: MeasureText
   Return type: int
   Description: Measure string width for default font
   Param[1]: text (type: const char *)
   Param[2]: fontSize (type: int)
-Function 428: MeasureTextEx() (4 input parameters)
+Function 432: MeasureTextEx() (4 input parameters)
   Name: MeasureTextEx
   Return type: Vector2
   Description: Measure string size for Font
@@ -3717,7 +3758,7 @@ Function 428: MeasureTextEx() (4 input parameters)
   Param[2]: text (type: const char *)
   Param[3]: fontSize (type: float)
   Param[4]: spacing (type: float)
-Function 429: MeasureTextCodepoints() (5 input parameters)
+Function 433: MeasureTextCodepoints() (5 input parameters)
   Name: MeasureTextCodepoints
   Return type: Vector2
   Description: Measure string size for an existing array of codepoints for Font
@@ -3726,144 +3767,144 @@ Function 429: MeasureTextCodepoints() (5 input parameters)
   Param[3]: length (type: int)
   Param[4]: fontSize (type: float)
   Param[5]: spacing (type: float)
-Function 430: GetGlyphIndex() (2 input parameters)
+Function 434: GetGlyphIndex() (2 input parameters)
   Name: GetGlyphIndex
   Return type: int
   Description: Get glyph index position in font for a codepoint (unicode character), fallback to '?' if not found
   Param[1]: font (type: Font)
   Param[2]: codepoint (type: int)
-Function 431: GetGlyphInfo() (2 input parameters)
+Function 435: GetGlyphInfo() (2 input parameters)
   Name: GetGlyphInfo
   Return type: GlyphInfo
   Description: Get glyph font info data for a codepoint (unicode character), fallback to '?' if not found
   Param[1]: font (type: Font)
   Param[2]: codepoint (type: int)
-Function 432: GetGlyphAtlasRec() (2 input parameters)
+Function 436: GetGlyphAtlasRec() (2 input parameters)
   Name: GetGlyphAtlasRec
   Return type: Rectangle
   Description: Get glyph rectangle in font atlas for a codepoint (unicode character), fallback to '?' if not found
   Param[1]: font (type: Font)
   Param[2]: codepoint (type: int)
-Function 433: LoadUTF8() (2 input parameters)
+Function 437: LoadUTF8() (2 input parameters)
   Name: LoadUTF8
   Return type: char *
   Description: Load UTF-8 text encoded from codepoints array
   Param[1]: codepoints (type: const int *)
   Param[2]: length (type: int)
-Function 434: UnloadUTF8() (1 input parameters)
+Function 438: UnloadUTF8() (1 input parameters)
   Name: UnloadUTF8
   Return type: void
   Description: Unload UTF-8 text encoded from codepoints array
   Param[1]: text (type: char *)
-Function 435: LoadCodepoints() (2 input parameters)
+Function 439: LoadCodepoints() (2 input parameters)
   Name: LoadCodepoints
   Return type: int *
   Description: Load all codepoints from a UTF-8 text string, codepoints count returned by parameter
   Param[1]: text (type: const char *)
   Param[2]: count (type: int *)
-Function 436: UnloadCodepoints() (1 input parameters)
+Function 440: UnloadCodepoints() (1 input parameters)
   Name: UnloadCodepoints
   Return type: void
   Description: Unload codepoints data from memory
   Param[1]: codepoints (type: int *)
-Function 437: GetCodepointCount() (1 input parameters)
+Function 441: GetCodepointCount() (1 input parameters)
   Name: GetCodepointCount
   Return type: int
   Description: Get total number of codepoints in a UTF-8 encoded string
   Param[1]: text (type: const char *)
-Function 438: GetCodepoint() (2 input parameters)
+Function 442: GetCodepoint() (2 input parameters)
   Name: GetCodepoint
   Return type: int
   Description: Get next codepoint in a UTF-8 encoded string, 0x3f('?') is returned on failure
   Param[1]: text (type: const char *)
   Param[2]: codepointSize (type: int *)
-Function 439: GetCodepointNext() (2 input parameters)
+Function 443: GetCodepointNext() (2 input parameters)
   Name: GetCodepointNext
   Return type: int
   Description: Get next codepoint in a UTF-8 encoded string, 0x3f('?') is returned on failure
   Param[1]: text (type: const char *)
   Param[2]: codepointSize (type: int *)
-Function 440: GetCodepointPrevious() (2 input parameters)
+Function 444: GetCodepointPrevious() (2 input parameters)
   Name: GetCodepointPrevious
   Return type: int
   Description: Get previous codepoint in a UTF-8 encoded string, 0x3f('?') is returned on failure
   Param[1]: text (type: const char *)
   Param[2]: codepointSize (type: int *)
-Function 441: CodepointToUTF8() (2 input parameters)
+Function 445: CodepointToUTF8() (2 input parameters)
   Name: CodepointToUTF8
   Return type: const char *
   Description: Encode one codepoint into UTF-8 byte array (array length returned as parameter)
   Param[1]: codepoint (type: int)
   Param[2]: utf8Size (type: int *)
-Function 442: LoadTextLines() (2 input parameters)
+Function 446: LoadTextLines() (2 input parameters)
   Name: LoadTextLines
   Return type: char **
   Description: Load text as separate lines ('\n')
   Param[1]: text (type: const char *)
   Param[2]: count (type: int *)
-Function 443: UnloadTextLines() (2 input parameters)
+Function 447: UnloadTextLines() (2 input parameters)
   Name: UnloadTextLines
   Return type: void
   Description: Unload text lines
   Param[1]: text (type: char **)
   Param[2]: lineCount (type: int)
-Function 444: TextCopy() (2 input parameters)
+Function 448: TextCopy() (2 input parameters)
   Name: TextCopy
   Return type: int
   Description: Copy one string to another, returns bytes copied
   Param[1]: dst (type: char *)
   Param[2]: src (type: const char *)
-Function 445: TextIsEqual() (2 input parameters)
+Function 449: TextIsEqual() (2 input parameters)
   Name: TextIsEqual
   Return type: bool
   Description: Check if two text string are equal
   Param[1]: text1 (type: const char *)
   Param[2]: text2 (type: const char *)
-Function 446: TextLength() (1 input parameters)
+Function 450: TextLength() (1 input parameters)
   Name: TextLength
   Return type: unsigned int
   Description: Get text length, checks for '\0' ending
   Param[1]: text (type: const char *)
-Function 447: TextFormat() (2 input parameters)
+Function 451: TextFormat() (2 input parameters)
   Name: TextFormat
   Return type: const char *
   Description: Text formatting with variables (sprintf() style)
   Param[1]: text (type: const char *)
   Param[2]: args (type: ...)
-Function 448: TextSubtext() (3 input parameters)
+Function 452: TextSubtext() (3 input parameters)
   Name: TextSubtext
   Return type: const char *
   Description: Get a piece of a text string
   Param[1]: text (type: const char *)
   Param[2]: position (type: int)
   Param[3]: length (type: int)
-Function 449: TextRemoveSpaces() (1 input parameters)
+Function 453: TextRemoveSpaces() (1 input parameters)
   Name: TextRemoveSpaces
   Return type: const char *
   Description: Remove text spaces, concat words
   Param[1]: text (type: const char *)
-Function 450: GetTextBetween() (3 input parameters)
+Function 454: GetTextBetween() (3 input parameters)
   Name: GetTextBetween
   Return type: char *
   Description: Get text between two strings
   Param[1]: text (type: const char *)
   Param[2]: begin (type: const char *)
   Param[3]: end (type: const char *)
-Function 451: TextReplace() (3 input parameters)
+Function 455: TextReplace() (3 input parameters)
   Name: TextReplace
   Return type: char *
   Description: Replace text string with new string
   Param[1]: text (type: const char *)
   Param[2]: search (type: const char *)
   Param[3]: replacement (type: const char *)
-Function 452: TextReplaceAlloc() (3 input parameters)
+Function 456: TextReplaceAlloc() (3 input parameters)
   Name: TextReplaceAlloc
   Return type: char *
   Description: Replace text string with new string, memory must be MemFree()
   Param[1]: text (type: const char *)
   Param[2]: search (type: const char *)
   Param[3]: replacement (type: const char *)
-Function 453: TextReplaceBetween() (4 input parameters)
+Function 457: TextReplaceBetween() (4 input parameters)
   Name: TextReplaceBetween
   Return type: char *
   Description: Replace text between two specific strings
@@ -3871,7 +3912,7 @@ Function 453: TextReplaceBetween() (4 input parameters)
   Param[2]: begin (type: const char *)
   Param[3]: end (type: const char *)
   Param[4]: replacement (type: const char *)
-Function 454: TextReplaceBetweenAlloc() (4 input parameters)
+Function 458: TextReplaceBetweenAlloc() (4 input parameters)
   Name: TextReplaceBetweenAlloc
   Return type: char *
   Description: Replace text between two specific strings, memory must be MemFree()
@@ -3879,96 +3920,96 @@ Function 454: TextReplaceBetweenAlloc() (4 input parameters)
   Param[2]: begin (type: const char *)
   Param[3]: end (type: const char *)
   Param[4]: replacement (type: const char *)
-Function 455: TextInsert() (3 input parameters)
+Function 459: TextInsert() (3 input parameters)
   Name: TextInsert
   Return type: char *
   Description: Insert text in a defined byte position
   Param[1]: text (type: const char *)
   Param[2]: insert (type: const char *)
   Param[3]: position (type: int)
-Function 456: TextInsertAlloc() (3 input parameters)
+Function 460: TextInsertAlloc() (3 input parameters)
   Name: TextInsertAlloc
   Return type: char *
   Description: Insert text in a defined byte position, memory must be MemFree()
   Param[1]: text (type: const char *)
   Param[2]: insert (type: const char *)
   Param[3]: position (type: int)
-Function 457: TextJoin() (3 input parameters)
+Function 461: TextJoin() (3 input parameters)
   Name: TextJoin
   Return type: char *
   Description: Join text strings with delimiter
   Param[1]: textList (type: char **)
   Param[2]: count (type: int)
   Param[3]: delimiter (type: const char *)
-Function 458: TextSplit() (3 input parameters)
+Function 462: TextSplit() (3 input parameters)
   Name: TextSplit
   Return type: char **
   Description: Split text into multiple strings, using MAX_TEXTSPLIT_COUNT static strings
   Param[1]: text (type: const char *)
   Param[2]: delimiter (type: char)
   Param[3]: count (type: int *)
-Function 459: TextAppend() (3 input parameters)
+Function 463: TextAppend() (3 input parameters)
   Name: TextAppend
   Return type: void
   Description: Append text at specific position and move cursor
   Param[1]: text (type: char *)
   Param[2]: append (type: const char *)
   Param[3]: position (type: int *)
-Function 460: TextFindIndex() (2 input parameters)
+Function 464: TextFindIndex() (2 input parameters)
   Name: TextFindIndex
   Return type: int
   Description: Find first text occurrence within a string, -1 if not found
   Param[1]: text (type: const char *)
   Param[2]: search (type: const char *)
-Function 461: TextToUpper() (1 input parameters)
+Function 465: TextToUpper() (1 input parameters)
   Name: TextToUpper
   Return type: char *
   Description: Get upper case version of provided string
   Param[1]: text (type: const char *)
-Function 462: TextToLower() (1 input parameters)
+Function 466: TextToLower() (1 input parameters)
   Name: TextToLower
   Return type: char *
   Description: Get lower case version of provided string
   Param[1]: text (type: const char *)
-Function 463: TextToPascal() (1 input parameters)
+Function 467: TextToPascal() (1 input parameters)
   Name: TextToPascal
   Return type: char *
   Description: Get Pascal case notation version of provided string
   Param[1]: text (type: const char *)
-Function 464: TextToSnake() (1 input parameters)
+Function 468: TextToSnake() (1 input parameters)
   Name: TextToSnake
   Return type: char *
   Description: Get Snake case notation version of provided string
   Param[1]: text (type: const char *)
-Function 465: TextToCamel() (1 input parameters)
+Function 469: TextToCamel() (1 input parameters)
   Name: TextToCamel
   Return type: char *
   Description: Get Camel case notation version of provided string
   Param[1]: text (type: const char *)
-Function 466: TextToInteger() (1 input parameters)
+Function 470: TextToInteger() (1 input parameters)
   Name: TextToInteger
   Return type: int
   Description: Get integer value from text
   Param[1]: text (type: const char *)
-Function 467: TextToFloat() (1 input parameters)
+Function 471: TextToFloat() (1 input parameters)
   Name: TextToFloat
   Return type: float
   Description: Get float value from text
   Param[1]: text (type: const char *)
-Function 468: DrawLine3D() (3 input parameters)
+Function 472: DrawLine3D() (3 input parameters)
   Name: DrawLine3D
   Return type: void
   Description: Draw a line in 3D world space
   Param[1]: startPos (type: Vector3)
   Param[2]: endPos (type: Vector3)
   Param[3]: color (type: Color)
-Function 469: DrawPoint3D() (2 input parameters)
+Function 473: DrawPoint3D() (2 input parameters)
   Name: DrawPoint3D
   Return type: void
   Description: Draw a point in 3D space, actually a small line
   Param[1]: position (type: Vector3)
   Param[2]: color (type: Color)
-Function 470: DrawCircle3D() (5 input parameters)
+Function 474: DrawCircle3D() (5 input parameters)
   Name: DrawCircle3D
   Return type: void
   Description: Draw a circle in 3D world space
@@ -3977,7 +4018,7 @@ Function 470: DrawCircle3D() (5 input parameters)
   Param[3]: rotationAxis (type: Vector3)
   Param[4]: rotationAngle (type: float)
   Param[5]: color (type: Color)
-Function 471: DrawTriangle3D() (4 input parameters)
+Function 475: DrawTriangle3D() (4 input parameters)
   Name: DrawTriangle3D
   Return type: void
   Description: Draw a color-filled triangle (vertex in counter-clockwise order!)
@@ -3985,14 +4026,14 @@ Function 471: DrawTriangle3D() (4 input parameters)
   Param[2]: v2 (type: Vector3)
   Param[3]: v3 (type: Vector3)
   Param[4]: color (type: Color)
-Function 472: DrawTriangleStrip3D() (3 input parameters)
+Function 476: DrawTriangleStrip3D() (3 input parameters)
   Name: DrawTriangleStrip3D
   Return type: void
   Description: Draw a triangle strip defined by points
   Param[1]: points (type: const Vector3 *)
   Param[2]: pointCount (type: int)
   Param[3]: color (type: Color)
-Function 473: DrawCube() (5 input parameters)
+Function 477: DrawCube() (5 input parameters)
   Name: DrawCube
   Return type: void
   Description: Draw cube
@@ -4001,14 +4042,14 @@ Function 473: DrawCube() (5 input parameters)
   Param[3]: height (type: float)
   Param[4]: length (type: float)
   Param[5]: color (type: Color)
-Function 474: DrawCubeV() (3 input parameters)
+Function 478: DrawCubeV() (3 input parameters)
   Name: DrawCubeV
   Return type: void
   Description: Draw cube (Vector version)
   Param[1]: position (type: Vector3)
   Param[2]: size (type: Vector3)
   Param[3]: color (type: Color)
-Function 475: DrawCubeWires() (5 input parameters)
+Function 479: DrawCubeWires() (5 input parameters)
   Name: DrawCubeWires
   Return type: void
   Description: Draw cube wires
@@ -4017,21 +4058,21 @@ Function 475: DrawCubeWires() (5 input parameters)
   Param[3]: height (type: float)
   Param[4]: length (type: float)
   Param[5]: color (type: Color)
-Function 476: DrawCubeWiresV() (3 input parameters)
+Function 480: DrawCubeWiresV() (3 input parameters)
   Name: DrawCubeWiresV
   Return type: void
   Description: Draw cube wires (Vector version)
   Param[1]: position (type: Vector3)
   Param[2]: size (type: Vector3)
   Param[3]: color (type: Color)
-Function 477: DrawSphere() (3 input parameters)
+Function 481: DrawSphere() (3 input parameters)
   Name: DrawSphere
   Return type: void
   Description: Draw sphere
   Param[1]: centerPos (type: Vector3)
   Param[2]: radius (type: float)
   Param[3]: color (type: Color)
-Function 478: DrawSphereEx() (5 input parameters)
+Function 482: DrawSphereEx() (5 input parameters)
   Name: DrawSphereEx
   Return type: void
   Description: Draw sphere with extended parameters
@@ -4040,7 +4081,7 @@ Function 478: DrawSphereEx() (5 input parameters)
   Param[3]: rings (type: int)
   Param[4]: slices (type: int)
   Param[5]: color (type: Color)
-Function 479: DrawSphereWires() (5 input parameters)
+Function 483: DrawSphereWires() (5 input parameters)
   Name: DrawSphereWires
   Return type: void
   Description: Draw sphere wires
@@ -4049,7 +4090,7 @@ Function 479: DrawSphereWires() (5 input parameters)
   Param[3]: rings (type: int)
   Param[4]: slices (type: int)
   Param[5]: color (type: Color)
-Function 480: DrawCylinder() (6 input parameters)
+Function 484: DrawCylinder() (6 input parameters)
   Name: DrawCylinder
   Return type: void
   Description: Draw a cylinder/cone
@@ -4059,7 +4100,7 @@ Function 480: DrawCylinder() (6 input parameters)
   Param[4]: height (type: float)
   Param[5]: slices (type: int)
   Param[6]: color (type: Color)
-Function 481: DrawCylinderEx() (6 input parameters)
+Function 485: DrawCylinderEx() (6 input parameters)
   Name: DrawCylinderEx
   Return type: void
   Description: Draw a cylinder with base at startPos and top at endPos
@@ -4069,7 +4110,7 @@ Function 481: DrawCylinderEx() (6 input parameters)
   Param[4]: endRadius (type: float)
   Param[5]: sides (type: int)
   Param[6]: color (type: Color)
-Function 482: DrawCylinderWires() (6 input parameters)
+Function 486: DrawCylinderWires() (6 input parameters)
   Name: DrawCylinderWires
   Return type: void
   Description: Draw a cylinder/cone wires
@@ -4079,7 +4120,7 @@ Function 482: DrawCylinderWires() (6 input parameters)
   Param[4]: height (type: float)
   Param[5]: slices (type: int)
   Param[6]: color (type: Color)
-Function 483: DrawCylinderWiresEx() (6 input parameters)
+Function 487: DrawCylinderWiresEx() (6 input parameters)
   Name: DrawCylinderWiresEx
   Return type: void
   Description: Draw a cylinder wires with base at startPos and top at endPos
@@ -4089,7 +4130,7 @@ Function 483: DrawCylinderWiresEx() (6 input parameters)
   Param[4]: endRadius (type: float)
   Param[5]: sides (type: int)
   Param[6]: color (type: Color)
-Function 484: DrawCapsule() (6 input parameters)
+Function 488: DrawCapsule() (6 input parameters)
   Name: DrawCapsule
   Return type: void
   Description: Draw a capsule with the center of its sphere caps at startPos and endPos
@@ -4099,7 +4140,7 @@ Function 484: DrawCapsule() (6 input parameters)
   Param[4]: slices (type: int)
   Param[5]: rings (type: int)
   Param[6]: color (type: Color)
-Function 485: DrawCapsuleWires() (6 input parameters)
+Function 489: DrawCapsuleWires() (6 input parameters)
   Name: DrawCapsuleWires
   Return type: void
   Description: Draw capsule wireframe with the center of its sphere caps at startPos and endPos
@@ -4109,51 +4150,51 @@ Function 485: DrawCapsuleWires() (6 input parameters)
   Param[4]: slices (type: int)
   Param[5]: rings (type: int)
   Param[6]: color (type: Color)
-Function 486: DrawPlane() (3 input parameters)
+Function 490: DrawPlane() (3 input parameters)
   Name: DrawPlane
   Return type: void
   Description: Draw a plane XZ
   Param[1]: centerPos (type: Vector3)
   Param[2]: size (type: Vector2)
   Param[3]: color (type: Color)
-Function 487: DrawRay() (2 input parameters)
+Function 491: DrawRay() (2 input parameters)
   Name: DrawRay
   Return type: void
   Description: Draw a ray line
   Param[1]: ray (type: Ray)
   Param[2]: color (type: Color)
-Function 488: DrawGrid() (2 input parameters)
+Function 492: DrawGrid() (2 input parameters)
   Name: DrawGrid
   Return type: void
   Description: Draw a grid (centered at (0, 0, 0))
   Param[1]: slices (type: int)
   Param[2]: spacing (type: float)
-Function 489: LoadModel() (1 input parameters)
+Function 493: LoadModel() (1 input parameters)
   Name: LoadModel
   Return type: Model
   Description: Load model from files (meshes and materials)
   Param[1]: fileName (type: const char *)
-Function 490: LoadModelFromMesh() (1 input parameters)
+Function 494: LoadModelFromMesh() (1 input parameters)
   Name: LoadModelFromMesh
   Return type: Model
   Description: Load model from generated mesh (default material)
   Param[1]: mesh (type: Mesh)
-Function 491: IsModelValid() (1 input parameters)
+Function 495: IsModelValid() (1 input parameters)
   Name: IsModelValid
   Return type: bool
   Description: Check if a model is valid (loaded in GPU, VAO/VBOs)
   Param[1]: model (type: Model)
-Function 492: UnloadModel() (1 input parameters)
+Function 496: UnloadModel() (1 input parameters)
   Name: UnloadModel
   Return type: void
   Description: Unload model (including meshes) from memory (RAM and/or VRAM)
   Param[1]: model (type: Model)
-Function 493: GetModelBoundingBox() (1 input parameters)
+Function 497: GetModelBoundingBox() (1 input parameters)
   Name: GetModelBoundingBox
   Return type: BoundingBox
   Description: Compute model bounding box limits (considers all meshes)
   Param[1]: model (type: Model)
-Function 494: DrawModel() (4 input parameters)
+Function 498: DrawModel() (4 input parameters)
   Name: DrawModel
   Return type: void
   Description: Draw a model (with texture if set)
@@ -4161,7 +4202,7 @@ Function 494: DrawModel() (4 input parameters)
   Param[2]: position (type: Vector3)
   Param[3]: scale (type: float)
   Param[4]: tint (type: Color)
-Function 495: DrawModelEx() (6 input parameters)
+Function 499: DrawModelEx() (6 input parameters)
   Name: DrawModelEx
   Return type: void
   Description: Draw a model with extended parameters
@@ -4171,7 +4212,7 @@ Function 495: DrawModelEx() (6 input parameters)
   Param[4]: rotationAngle (type: float)
   Param[5]: scale (type: Vector3)
   Param[6]: tint (type: Color)
-Function 496: DrawModelWires() (4 input parameters)
+Function 500: DrawModelWires() (4 input parameters)
   Name: DrawModelWires
   Return type: void
   Description: Draw a model wires (with texture if set)
@@ -4179,7 +4220,7 @@ Function 496: DrawModelWires() (4 input parameters)
   Param[2]: position (type: Vector3)
   Param[3]: scale (type: float)
   Param[4]: tint (type: Color)
-Function 497: DrawModelWiresEx() (6 input parameters)
+Function 501: DrawModelWiresEx() (6 input parameters)
   Name: DrawModelWiresEx
   Return type: void
   Description: Draw a model wires (with texture if set) with extended parameters
@@ -4189,13 +4230,13 @@ Function 497: DrawModelWiresEx() (6 input parameters)
   Param[4]: rotationAngle (type: float)
   Param[5]: scale (type: Vector3)
   Param[6]: tint (type: Color)
-Function 498: DrawBoundingBox() (2 input parameters)
+Function 502: DrawBoundingBox() (2 input parameters)
   Name: DrawBoundingBox
   Return type: void
   Description: Draw bounding box (wires)
   Param[1]: box (type: BoundingBox)
   Param[2]: color (type: Color)
-Function 499: DrawBillboard() (5 input parameters)
+Function 503: DrawBillboard() (5 input parameters)
   Name: DrawBillboard
   Return type: void
   Description: Draw a billboard texture
@@ -4204,7 +4245,7 @@ Function 499: DrawBillboard() (5 input parameters)
   Param[3]: position (type: Vector3)
   Param[4]: scale (type: float)
   Param[5]: tint (type: Color)
-Function 500: DrawBillboardRec() (6 input parameters)
+Function 504: DrawBillboardRec() (6 input parameters)
   Name: DrawBillboardRec
   Return type: void
   Description: Draw a billboard texture defined by source
@@ -4214,7 +4255,7 @@ Function 500: DrawBillboardRec() (6 input parameters)
   Param[4]: position (type: Vector3)
   Param[5]: size (type: Vector2)
   Param[6]: tint (type: Color)
-Function 501: DrawBillboardPro() (9 input parameters)
+Function 505: DrawBillboardPro() (9 input parameters)
   Name: DrawBillboardPro
   Return type: void
   Description: Draw a billboard texture defined by source and rotation
@@ -4227,13 +4268,13 @@ Function 501: DrawBillboardPro() (9 input parameters)
   Param[7]: origin (type: Vector2)
   Param[8]: rotation (type: float)
   Param[9]: tint (type: Color)
-Function 502: UploadMesh() (2 input parameters)
+Function 506: UploadMesh() (2 input parameters)
   Name: UploadMesh
   Return type: void
   Description: Upload mesh vertex data in GPU and provide VAO/VBO ids
   Param[1]: mesh (type: Mesh *)
   Param[2]: dynamic (type: bool)
-Function 503: UpdateMeshBuffer() (5 input parameters)
+Function 507: UpdateMeshBuffer() (5 input parameters)
   Name: UpdateMeshBuffer
   Return type: void
   Description: Update mesh vertex data in GPU for a specific buffer index
@@ -4242,19 +4283,19 @@ Function 503: UpdateMeshBuffer() (5 input parameters)
   Param[3]: data (type: const void *)
   Param[4]: dataSize (type: int)
   Param[5]: offset (type: int)
-Function 504: UnloadMesh() (1 input parameters)
+Function 508: UnloadMesh() (1 input parameters)
   Name: UnloadMesh
   Return type: void
   Description: Unload mesh data from CPU and GPU
   Param[1]: mesh (type: Mesh)
-Function 505: DrawMesh() (3 input parameters)
+Function 509: DrawMesh() (3 input parameters)
   Name: DrawMesh
   Return type: void
   Description: Draw a 3d mesh with material and transform
   Param[1]: mesh (type: Mesh)
   Param[2]: material (type: Material)
   Param[3]: transform (type: Matrix)
-Function 506: DrawMeshInstanced() (4 input parameters)
+Function 510: DrawMeshInstanced() (4 input parameters)
   Name: DrawMeshInstanced
   Return type: void
   Description: Draw multiple mesh instances with material and different transforms
@@ -4262,35 +4303,35 @@ Function 506: DrawMeshInstanced() (4 input parameters)
   Param[2]: material (type: Material)
   Param[3]: transforms (type: const Matrix *)
   Param[4]: instances (type: int)
-Function 507: GetMeshBoundingBox() (1 input parameters)
+Function 511: GetMeshBoundingBox() (1 input parameters)
   Name: GetMeshBoundingBox
   Return type: BoundingBox
   Description: Compute mesh bounding box limits
   Param[1]: mesh (type: Mesh)
-Function 508: GenMeshTangents() (1 input parameters)
+Function 512: GenMeshTangents() (1 input parameters)
   Name: GenMeshTangents
   Return type: void
   Description: Compute mesh tangents
   Param[1]: mesh (type: Mesh *)
-Function 509: ExportMesh() (2 input parameters)
+Function 513: ExportMesh() (2 input parameters)
   Name: ExportMesh
   Return type: bool
   Description: Export mesh data to file, returns true on success
   Param[1]: mesh (type: Mesh)
   Param[2]: fileName (type: const char *)
-Function 510: ExportMeshAsCode() (2 input parameters)
+Function 514: ExportMeshAsCode() (2 input parameters)
   Name: ExportMeshAsCode
   Return type: bool
   Description: Export mesh as code file (.h) defining multiple arrays of vertex attributes
   Param[1]: mesh (type: Mesh)
   Param[2]: fileName (type: const char *)
-Function 511: GenMeshPoly() (2 input parameters)
+Function 515: GenMeshPoly() (2 input parameters)
   Name: GenMeshPoly
   Return type: Mesh
   Description: Generate polygonal mesh
   Param[1]: sides (type: int)
   Param[2]: radius (type: float)
-Function 512: GenMeshPlane() (4 input parameters)
+Function 516: GenMeshPlane() (4 input parameters)
   Name: GenMeshPlane
   Return type: Mesh
   Description: Generate plane mesh (with subdivisions)
@@ -4298,42 +4339,42 @@ Function 512: GenMeshPlane() (4 input parameters)
   Param[2]: length (type: float)
   Param[3]: resX (type: int)
   Param[4]: resZ (type: int)
-Function 513: GenMeshCube() (3 input parameters)
+Function 517: GenMeshCube() (3 input parameters)
   Name: GenMeshCube
   Return type: Mesh
   Description: Generate cuboid mesh
   Param[1]: width (type: float)
   Param[2]: height (type: float)
   Param[3]: length (type: float)
-Function 514: GenMeshSphere() (3 input parameters)
+Function 518: GenMeshSphere() (3 input parameters)
   Name: GenMeshSphere
   Return type: Mesh
   Description: Generate sphere mesh (standard sphere)
   Param[1]: radius (type: float)
   Param[2]: rings (type: int)
   Param[3]: slices (type: int)
-Function 515: GenMeshHemiSphere() (3 input parameters)
+Function 519: GenMeshHemiSphere() (3 input parameters)
   Name: GenMeshHemiSphere
   Return type: Mesh
   Description: Generate half-sphere mesh (no bottom cap)
   Param[1]: radius (type: float)
   Param[2]: rings (type: int)
   Param[3]: slices (type: int)
-Function 516: GenMeshCylinder() (3 input parameters)
+Function 520: GenMeshCylinder() (3 input parameters)
   Name: GenMeshCylinder
   Return type: Mesh
   Description: Generate cylinder mesh
   Param[1]: radius (type: float)
   Param[2]: height (type: float)
   Param[3]: slices (type: int)
-Function 517: GenMeshCone() (3 input parameters)
+Function 521: GenMeshCone() (3 input parameters)
   Name: GenMeshCone
   Return type: Mesh
   Description: Generate cone/pyramid mesh
   Param[1]: radius (type: float)
   Param[2]: height (type: float)
   Param[3]: slices (type: int)
-Function 518: GenMeshTorus() (4 input parameters)
+Function 522: GenMeshTorus() (4 input parameters)
   Name: GenMeshTorus
   Return type: Mesh
   Description: Generate torus mesh
@@ -4341,7 +4382,7 @@ Function 518: GenMeshTorus() (4 input parameters)
   Param[2]: size (type: float)
   Param[3]: radSeg (type: int)
   Param[4]: sides (type: int)
-Function 519: GenMeshKnot() (4 input parameters)
+Function 523: GenMeshKnot() (4 input parameters)
   Name: GenMeshKnot
   Return type: Mesh
   Description: Generate trefoil knot mesh
@@ -4349,67 +4390,67 @@ Function 519: GenMeshKnot() (4 input parameters)
   Param[2]: size (type: float)
   Param[3]: radSeg (type: int)
   Param[4]: sides (type: int)
-Function 520: GenMeshHeightmap() (2 input parameters)
+Function 524: GenMeshHeightmap() (2 input parameters)
   Name: GenMeshHeightmap
   Return type: Mesh
   Description: Generate heightmap mesh from image data
   Param[1]: heightmap (type: Image)
   Param[2]: size (type: Vector3)
-Function 521: GenMeshCubicmap() (2 input parameters)
+Function 525: GenMeshCubicmap() (2 input parameters)
   Name: GenMeshCubicmap
   Return type: Mesh
   Description: Generate cubes-based map mesh from image data
   Param[1]: cubicmap (type: Image)
   Param[2]: cubeSize (type: Vector3)
-Function 522: LoadMaterials() (2 input parameters)
+Function 526: LoadMaterials() (2 input parameters)
   Name: LoadMaterials
   Return type: Material *
   Description: Load materials from model file
   Param[1]: fileName (type: const char *)
   Param[2]: materialCount (type: int *)
-Function 523: LoadMaterialDefault() (0 input parameters)
+Function 527: LoadMaterialDefault() (0 input parameters)
   Name: LoadMaterialDefault
   Return type: Material
   Description: Load default material (Supports: DIFFUSE, SPECULAR, NORMAL maps)
   No input parameters
-Function 524: IsMaterialValid() (1 input parameters)
+Function 528: IsMaterialValid() (1 input parameters)
   Name: IsMaterialValid
   Return type: bool
   Description: Check if a material is valid (shader assigned, map textures loaded in GPU)
   Param[1]: material (type: Material)
-Function 525: UnloadMaterial() (1 input parameters)
+Function 529: UnloadMaterial() (1 input parameters)
   Name: UnloadMaterial
   Return type: void
   Description: Unload material from GPU memory (VRAM)
   Param[1]: material (type: Material)
-Function 526: SetMaterialTexture() (3 input parameters)
+Function 530: SetMaterialTexture() (3 input parameters)
   Name: SetMaterialTexture
   Return type: void
   Description: Set texture for a material map type (MATERIAL_MAP_DIFFUSE, MATERIAL_MAP_SPECULAR...)
   Param[1]: material (type: Material *)
   Param[2]: mapType (type: int)
   Param[3]: texture (type: Texture2D)
-Function 527: SetModelMeshMaterial() (3 input parameters)
+Function 531: SetModelMeshMaterial() (3 input parameters)
   Name: SetModelMeshMaterial
   Return type: void
   Description: Set material for a mesh
   Param[1]: model (type: Model *)
   Param[2]: meshId (type: int)
   Param[3]: materialId (type: int)
-Function 528: LoadModelAnimations() (2 input parameters)
+Function 532: LoadModelAnimations() (2 input parameters)
   Name: LoadModelAnimations
   Return type: ModelAnimation *
   Description: Load model animations from file
   Param[1]: fileName (type: const char *)
   Param[2]: animCount (type: int *)
-Function 529: UpdateModelAnimation() (3 input parameters)
+Function 533: UpdateModelAnimation() (3 input parameters)
   Name: UpdateModelAnimation
   Return type: void
   Description: Update model animation pose (vertex buffers and bone matrices)
   Param[1]: model (type: Model)
   Param[2]: anim (type: ModelAnimation)
   Param[3]: frame (type: float)
-Function 530: UpdateModelAnimationEx() (6 input parameters)
+Function 534: UpdateModelAnimationEx() (6 input parameters)
   Name: UpdateModelAnimationEx
   Return type: void
   Description: Update model animation pose, blending two animations
@@ -4419,19 +4460,19 @@ Function 530: UpdateModelAnimationEx() (6 input parameters)
   Param[4]: animB (type: ModelAnimation)
   Param[5]: frameB (type: float)
   Param[6]: blend (type: float)
-Function 531: UnloadModelAnimations() (2 input parameters)
+Function 535: UnloadModelAnimations() (2 input parameters)
   Name: UnloadModelAnimations
   Return type: void
   Description: Unload animation array data
   Param[1]: animations (type: ModelAnimation *)
   Param[2]: animCount (type: int)
-Function 532: IsModelAnimationValid() (2 input parameters)
+Function 536: IsModelAnimationValid() (2 input parameters)
   Name: IsModelAnimationValid
   Return type: bool
   Description: Check model animation skeleton match
   Param[1]: model (type: Model)
   Param[2]: anim (type: ModelAnimation)
-Function 533: CheckCollisionSpheres() (4 input parameters)
+Function 537: CheckCollisionSpheres() (4 input parameters)
   Name: CheckCollisionSpheres
   Return type: bool
   Description: Check collision between two spheres
@@ -4439,40 +4480,40 @@ Function 533: CheckCollisionSpheres() (4 input parameters)
   Param[2]: radius1 (type: float)
   Param[3]: center2 (type: Vector3)
   Param[4]: radius2 (type: float)
-Function 534: CheckCollisionBoxes() (2 input parameters)
+Function 538: CheckCollisionBoxes() (2 input parameters)
   Name: CheckCollisionBoxes
   Return type: bool
   Description: Check collision between two bounding boxes
   Param[1]: box1 (type: BoundingBox)
   Param[2]: box2 (type: BoundingBox)
-Function 535: CheckCollisionBoxSphere() (3 input parameters)
+Function 539: CheckCollisionBoxSphere() (3 input parameters)
   Name: CheckCollisionBoxSphere
   Return type: bool
   Description: Check collision between box and sphere
   Param[1]: box (type: BoundingBox)
   Param[2]: center (type: Vector3)
   Param[3]: radius (type: float)
-Function 536: GetRayCollisionSphere() (3 input parameters)
+Function 540: GetRayCollisionSphere() (3 input parameters)
   Name: GetRayCollisionSphere
   Return type: RayCollision
   Description: Get collision info between ray and sphere
   Param[1]: ray (type: Ray)
   Param[2]: center (type: Vector3)
   Param[3]: radius (type: float)
-Function 537: GetRayCollisionBox() (2 input parameters)
+Function 541: GetRayCollisionBox() (2 input parameters)
   Name: GetRayCollisionBox
   Return type: RayCollision
   Description: Get collision info between ray and box
   Param[1]: ray (type: Ray)
   Param[2]: box (type: BoundingBox)
-Function 538: GetRayCollisionMesh() (3 input parameters)
+Function 542: GetRayCollisionMesh() (3 input parameters)
   Name: GetRayCollisionMesh
   Return type: RayCollision
   Description: Get collision info between ray and mesh
   Param[1]: ray (type: Ray)
   Param[2]: mesh (type: Mesh)
   Param[3]: transform (type: Matrix)
-Function 539: GetRayCollisionTriangle() (4 input parameters)
+Function 543: GetRayCollisionTriangle() (4 input parameters)
   Name: GetRayCollisionTriangle
   Return type: RayCollision
   Description: Get collision info between ray and triangle
@@ -4480,7 +4521,7 @@ Function 539: GetRayCollisionTriangle() (4 input parameters)
   Param[2]: p1 (type: Vector3)
   Param[3]: p2 (type: Vector3)
   Param[4]: p3 (type: Vector3)
-Function 540: GetRayCollisionQuad() (5 input parameters)
+Function 544: GetRayCollisionQuad() (5 input parameters)
   Name: GetRayCollisionQuad
   Return type: RayCollision
   Description: Get collision info between ray and quad
@@ -4489,158 +4530,158 @@ Function 540: GetRayCollisionQuad() (5 input parameters)
   Param[3]: p2 (type: Vector3)
   Param[4]: p3 (type: Vector3)
   Param[5]: p4 (type: Vector3)
-Function 541: InitAudioDevice() (0 input parameters)
+Function 545: InitAudioDevice() (0 input parameters)
   Name: InitAudioDevice
   Return type: void
   Description: Initialize audio device and context
   No input parameters
-Function 542: CloseAudioDevice() (0 input parameters)
+Function 546: CloseAudioDevice() (0 input parameters)
   Name: CloseAudioDevice
   Return type: void
   Description: Close the audio device and context
   No input parameters
-Function 543: IsAudioDeviceReady() (0 input parameters)
+Function 547: IsAudioDeviceReady() (0 input parameters)
   Name: IsAudioDeviceReady
   Return type: bool
   Description: Check if audio device has been initialized successfully
   No input parameters
-Function 544: SetMasterVolume() (1 input parameters)
+Function 548: SetMasterVolume() (1 input parameters)
   Name: SetMasterVolume
   Return type: void
   Description: Set master volume (listener)
   Param[1]: volume (type: float)
-Function 545: GetMasterVolume() (0 input parameters)
+Function 549: GetMasterVolume() (0 input parameters)
   Name: GetMasterVolume
   Return type: float
   Description: Get master volume (listener)
   No input parameters
-Function 546: LoadWave() (1 input parameters)
+Function 550: LoadWave() (1 input parameters)
   Name: LoadWave
   Return type: Wave
   Description: Load wave data from file
   Param[1]: fileName (type: const char *)
-Function 547: LoadWaveFromMemory() (3 input parameters)
+Function 551: LoadWaveFromMemory() (3 input parameters)
   Name: LoadWaveFromMemory
   Return type: Wave
   Description: Load wave from memory buffer, fileType refers to extension: i.e. '.wav'
   Param[1]: fileType (type: const char *)
   Param[2]: fileData (type: const unsigned char *)
   Param[3]: dataSize (type: int)
-Function 548: IsWaveValid() (1 input parameters)
+Function 552: IsWaveValid() (1 input parameters)
   Name: IsWaveValid
   Return type: bool
   Description: Checks if wave data is valid (data loaded and parameters)
   Param[1]: wave (type: Wave)
-Function 549: LoadSound() (1 input parameters)
+Function 553: LoadSound() (1 input parameters)
   Name: LoadSound
   Return type: Sound
   Description: Load sound from file
   Param[1]: fileName (type: const char *)
-Function 550: LoadSoundFromWave() (1 input parameters)
+Function 554: LoadSoundFromWave() (1 input parameters)
   Name: LoadSoundFromWave
   Return type: Sound
   Description: Load sound from wave data
   Param[1]: wave (type: Wave)
-Function 551: LoadSoundAlias() (1 input parameters)
+Function 555: LoadSoundAlias() (1 input parameters)
   Name: LoadSoundAlias
   Return type: Sound
   Description: Create a new sound that shares the same sample data as the source sound, does not own the sound data
   Param[1]: source (type: Sound)
-Function 552: IsSoundValid() (1 input parameters)
+Function 556: IsSoundValid() (1 input parameters)
   Name: IsSoundValid
   Return type: bool
   Description: Checks if a sound is valid (data loaded and buffers initialized)
   Param[1]: sound (type: Sound)
-Function 553: UpdateSound() (3 input parameters)
+Function 557: UpdateSound() (3 input parameters)
   Name: UpdateSound
   Return type: void
   Description: Update sound buffer with new data (default data format: 32 bit float, stereo)
   Param[1]: sound (type: Sound)
   Param[2]: data (type: const void *)
   Param[3]: sampleCount (type: int)
-Function 554: UnloadWave() (1 input parameters)
+Function 558: UnloadWave() (1 input parameters)
   Name: UnloadWave
   Return type: void
   Description: Unload wave data
   Param[1]: wave (type: Wave)
-Function 555: UnloadSound() (1 input parameters)
+Function 559: UnloadSound() (1 input parameters)
   Name: UnloadSound
   Return type: void
   Description: Unload sound
   Param[1]: sound (type: Sound)
-Function 556: UnloadSoundAlias() (1 input parameters)
+Function 560: UnloadSoundAlias() (1 input parameters)
   Name: UnloadSoundAlias
   Return type: void
   Description: Unload a sound alias (does not deallocate sample data)
   Param[1]: alias (type: Sound)
-Function 557: ExportWave() (2 input parameters)
+Function 561: ExportWave() (2 input parameters)
   Name: ExportWave
   Return type: bool
   Description: Export wave data to file, returns true on success
   Param[1]: wave (type: Wave)
   Param[2]: fileName (type: const char *)
-Function 558: ExportWaveAsCode() (2 input parameters)
+Function 562: ExportWaveAsCode() (2 input parameters)
   Name: ExportWaveAsCode
   Return type: bool
   Description: Export wave sample data to code (.h), returns true on success
   Param[1]: wave (type: Wave)
   Param[2]: fileName (type: const char *)
-Function 559: PlaySound() (1 input parameters)
+Function 563: PlaySound() (1 input parameters)
   Name: PlaySound
   Return type: void
   Description: Play a sound
   Param[1]: sound (type: Sound)
-Function 560: StopSound() (1 input parameters)
+Function 564: StopSound() (1 input parameters)
   Name: StopSound
   Return type: void
   Description: Stop playing a sound
   Param[1]: sound (type: Sound)
-Function 561: PauseSound() (1 input parameters)
+Function 565: PauseSound() (1 input parameters)
   Name: PauseSound
   Return type: void
   Description: Pause a sound
   Param[1]: sound (type: Sound)
-Function 562: ResumeSound() (1 input parameters)
+Function 566: ResumeSound() (1 input parameters)
   Name: ResumeSound
   Return type: void
   Description: Resume a paused sound
   Param[1]: sound (type: Sound)
-Function 563: IsSoundPlaying() (1 input parameters)
+Function 567: IsSoundPlaying() (1 input parameters)
   Name: IsSoundPlaying
   Return type: bool
   Description: Check if a sound is currently playing
   Param[1]: sound (type: Sound)
-Function 564: SetSoundVolume() (2 input parameters)
+Function 568: SetSoundVolume() (2 input parameters)
   Name: SetSoundVolume
   Return type: void
   Description: Set volume for a sound (1.0 is max level)
   Param[1]: sound (type: Sound)
   Param[2]: volume (type: float)
-Function 565: SetSoundPitch() (2 input parameters)
+Function 569: SetSoundPitch() (2 input parameters)
   Name: SetSoundPitch
   Return type: void
   Description: Set pitch for a sound (1.0 is base level)
   Param[1]: sound (type: Sound)
   Param[2]: pitch (type: float)
-Function 566: SetSoundPan() (2 input parameters)
+Function 570: SetSoundPan() (2 input parameters)
   Name: SetSoundPan
   Return type: void
   Description: Set pan for a sound (-1.0 left, 0.0 center, 1.0 right)
   Param[1]: sound (type: Sound)
   Param[2]: pan (type: float)
-Function 567: WaveCopy() (1 input parameters)
+Function 571: WaveCopy() (1 input parameters)
   Name: WaveCopy
   Return type: Wave
   Description: Copy a wave to a new wave
   Param[1]: wave (type: Wave)
-Function 568: WaveCrop() (3 input parameters)
+Function 572: WaveCrop() (3 input parameters)
   Name: WaveCrop
   Return type: void
   Description: Crop a wave to defined frames range
   Param[1]: wave (type: Wave *)
   Param[2]: initFrame (type: int)
   Param[3]: finalFrame (type: int)
-Function 569: WaveFormat() (4 input parameters)
+Function 573: WaveFormat() (4 input parameters)
   Name: WaveFormat
   Return type: void
   Description: Convert wave data to desired format
@@ -4648,203 +4689,203 @@ Function 569: WaveFormat() (4 input parameters)
   Param[2]: sampleRate (type: int)
   Param[3]: sampleSize (type: int)
   Param[4]: channels (type: int)
-Function 570: LoadWaveSamples() (1 input parameters)
+Function 574: LoadWaveSamples() (1 input parameters)
   Name: LoadWaveSamples
   Return type: float *
   Description: Load samples data from wave as a 32bit float data array
   Param[1]: wave (type: Wave)
-Function 571: UnloadWaveSamples() (1 input parameters)
+Function 575: UnloadWaveSamples() (1 input parameters)
   Name: UnloadWaveSamples
   Return type: void
   Description: Unload samples data loaded with LoadWaveSamples()
   Param[1]: samples (type: float *)
-Function 572: LoadMusicStream() (1 input parameters)
+Function 576: LoadMusicStream() (1 input parameters)
   Name: LoadMusicStream
   Return type: Music
   Description: Load music stream from file
   Param[1]: fileName (type: const char *)
-Function 573: LoadMusicStreamFromMemory() (3 input parameters)
+Function 577: LoadMusicStreamFromMemory() (3 input parameters)
   Name: LoadMusicStreamFromMemory
   Return type: Music
   Description: Load music stream from data
   Param[1]: fileType (type: const char *)
   Param[2]: data (type: const unsigned char *)
   Param[3]: dataSize (type: int)
-Function 574: IsMusicValid() (1 input parameters)
+Function 578: IsMusicValid() (1 input parameters)
   Name: IsMusicValid
   Return type: bool
   Description: Checks if a music stream is valid (context and buffers initialized)
   Param[1]: music (type: Music)
-Function 575: UnloadMusicStream() (1 input parameters)
+Function 579: UnloadMusicStream() (1 input parameters)
   Name: UnloadMusicStream
   Return type: void
   Description: Unload music stream
   Param[1]: music (type: Music)
-Function 576: PlayMusicStream() (1 input parameters)
+Function 580: PlayMusicStream() (1 input parameters)
   Name: PlayMusicStream
   Return type: void
   Description: Start music playing
   Param[1]: music (type: Music)
-Function 577: IsMusicStreamPlaying() (1 input parameters)
+Function 581: IsMusicStreamPlaying() (1 input parameters)
   Name: IsMusicStreamPlaying
   Return type: bool
   Description: Check if music is playing
   Param[1]: music (type: Music)
-Function 578: UpdateMusicStream() (1 input parameters)
+Function 582: UpdateMusicStream() (1 input parameters)
   Name: UpdateMusicStream
   Return type: void
   Description: Updates buffers for music streaming
   Param[1]: music (type: Music)
-Function 579: StopMusicStream() (1 input parameters)
+Function 583: StopMusicStream() (1 input parameters)
   Name: StopMusicStream
   Return type: void
   Description: Stop music playing
   Param[1]: music (type: Music)
-Function 580: PauseMusicStream() (1 input parameters)
+Function 584: PauseMusicStream() (1 input parameters)
   Name: PauseMusicStream
   Return type: void
   Description: Pause music playing
   Param[1]: music (type: Music)
-Function 581: ResumeMusicStream() (1 input parameters)
+Function 585: ResumeMusicStream() (1 input parameters)
   Name: ResumeMusicStream
   Return type: void
   Description: Resume playing paused music
   Param[1]: music (type: Music)
-Function 582: SeekMusicStream() (2 input parameters)
+Function 586: SeekMusicStream() (2 input parameters)
   Name: SeekMusicStream
   Return type: void
   Description: Seek music to a position (in seconds)
   Param[1]: music (type: Music)
   Param[2]: position (type: float)
-Function 583: SetMusicVolume() (2 input parameters)
+Function 587: SetMusicVolume() (2 input parameters)
   Name: SetMusicVolume
   Return type: void
   Description: Set volume for music (1.0 is max level)
   Param[1]: music (type: Music)
   Param[2]: volume (type: float)
-Function 584: SetMusicPitch() (2 input parameters)
+Function 588: SetMusicPitch() (2 input parameters)
   Name: SetMusicPitch
   Return type: void
   Description: Set pitch for a music (1.0 is base level)
   Param[1]: music (type: Music)
   Param[2]: pitch (type: float)
-Function 585: SetMusicPan() (2 input parameters)
+Function 589: SetMusicPan() (2 input parameters)
   Name: SetMusicPan
   Return type: void
   Description: Set pan for a music (-1.0 left, 0.0 center, 1.0 right)
   Param[1]: music (type: Music)
   Param[2]: pan (type: float)
-Function 586: GetMusicTimeLength() (1 input parameters)
+Function 590: GetMusicTimeLength() (1 input parameters)
   Name: GetMusicTimeLength
   Return type: float
   Description: Get music time length (in seconds)
   Param[1]: music (type: Music)
-Function 587: GetMusicTimePlayed() (1 input parameters)
+Function 591: GetMusicTimePlayed() (1 input parameters)
   Name: GetMusicTimePlayed
   Return type: float
   Description: Get current music time played (in seconds)
   Param[1]: music (type: Music)
-Function 588: LoadAudioStream() (3 input parameters)
+Function 592: LoadAudioStream() (3 input parameters)
   Name: LoadAudioStream
   Return type: AudioStream
   Description: Load audio stream (to stream raw audio pcm data)
   Param[1]: sampleRate (type: unsigned int)
   Param[2]: sampleSize (type: unsigned int)
   Param[3]: channels (type: unsigned int)
-Function 589: IsAudioStreamValid() (1 input parameters)
+Function 593: IsAudioStreamValid() (1 input parameters)
   Name: IsAudioStreamValid
   Return type: bool
   Description: Checks if an audio stream is valid (buffers initialized)
   Param[1]: stream (type: AudioStream)
-Function 590: UnloadAudioStream() (1 input parameters)
+Function 594: UnloadAudioStream() (1 input parameters)
   Name: UnloadAudioStream
   Return type: void
   Description: Unload audio stream and free memory
   Param[1]: stream (type: AudioStream)
-Function 591: UpdateAudioStream() (3 input parameters)
+Function 595: UpdateAudioStream() (3 input parameters)
   Name: UpdateAudioStream
   Return type: void
   Description: Update audio stream buffers with data
   Param[1]: stream (type: AudioStream)
   Param[2]: data (type: const void *)
   Param[3]: frameCount (type: int)
-Function 592: IsAudioStreamProcessed() (1 input parameters)
+Function 596: IsAudioStreamProcessed() (1 input parameters)
   Name: IsAudioStreamProcessed
   Return type: bool
   Description: Check if any audio stream buffers requires refill
   Param[1]: stream (type: AudioStream)
-Function 593: PlayAudioStream() (1 input parameters)
+Function 597: PlayAudioStream() (1 input parameters)
   Name: PlayAudioStream
   Return type: void
   Description: Play audio stream
   Param[1]: stream (type: AudioStream)
-Function 594: PauseAudioStream() (1 input parameters)
+Function 598: PauseAudioStream() (1 input parameters)
   Name: PauseAudioStream
   Return type: void
   Description: Pause audio stream
   Param[1]: stream (type: AudioStream)
-Function 595: ResumeAudioStream() (1 input parameters)
+Function 599: ResumeAudioStream() (1 input parameters)
   Name: ResumeAudioStream
   Return type: void
   Description: Resume audio stream
   Param[1]: stream (type: AudioStream)
-Function 596: IsAudioStreamPlaying() (1 input parameters)
+Function 600: IsAudioStreamPlaying() (1 input parameters)
   Name: IsAudioStreamPlaying
   Return type: bool
   Description: Check if audio stream is playing
   Param[1]: stream (type: AudioStream)
-Function 597: StopAudioStream() (1 input parameters)
+Function 601: StopAudioStream() (1 input parameters)
   Name: StopAudioStream
   Return type: void
   Description: Stop audio stream
   Param[1]: stream (type: AudioStream)
-Function 598: SetAudioStreamVolume() (2 input parameters)
+Function 602: SetAudioStreamVolume() (2 input parameters)
   Name: SetAudioStreamVolume
   Return type: void
   Description: Set volume for audio stream (1.0 is max level)
   Param[1]: stream (type: AudioStream)
   Param[2]: volume (type: float)
-Function 599: SetAudioStreamPitch() (2 input parameters)
+Function 603: SetAudioStreamPitch() (2 input parameters)
   Name: SetAudioStreamPitch
   Return type: void
   Description: Set pitch for audio stream (1.0 is base level)
   Param[1]: stream (type: AudioStream)
   Param[2]: pitch (type: float)
-Function 600: SetAudioStreamPan() (2 input parameters)
+Function 604: SetAudioStreamPan() (2 input parameters)
   Name: SetAudioStreamPan
   Return type: void
   Description: Set pan for audio stream (-1.0 to 1.0 range, 0.0 is centered)
   Param[1]: stream (type: AudioStream)
   Param[2]: pan (type: float)
-Function 601: SetAudioStreamBufferSizeDefault() (1 input parameters)
+Function 605: SetAudioStreamBufferSizeDefault() (1 input parameters)
   Name: SetAudioStreamBufferSizeDefault
   Return type: void
   Description: Default size for new audio streams
   Param[1]: size (type: int)
-Function 602: SetAudioStreamCallback() (2 input parameters)
+Function 606: SetAudioStreamCallback() (2 input parameters)
   Name: SetAudioStreamCallback
   Return type: void
   Description: Audio thread callback to request new data
   Param[1]: stream (type: AudioStream)
   Param[2]: callback (type: AudioCallback)
-Function 603: AttachAudioStreamProcessor() (2 input parameters)
+Function 607: AttachAudioStreamProcessor() (2 input parameters)
   Name: AttachAudioStreamProcessor
   Return type: void
   Description: Attach audio stream processor to stream, receives frames x 2 samples as 'float' (stereo)
   Param[1]: stream (type: AudioStream)
   Param[2]: processor (type: AudioCallback)
-Function 604: DetachAudioStreamProcessor() (2 input parameters)
+Function 608: DetachAudioStreamProcessor() (2 input parameters)
   Name: DetachAudioStreamProcessor
   Return type: void
   Description: Detach audio stream processor from stream
   Param[1]: stream (type: AudioStream)
   Param[2]: processor (type: AudioCallback)
-Function 605: AttachAudioMixedProcessor() (1 input parameters)
+Function 609: AttachAudioMixedProcessor() (1 input parameters)
   Name: AttachAudioMixedProcessor
   Return type: void
   Description: Attach audio stream processor to the entire audio pipeline, receives frames x 2 samples as 'float' (stereo)
   Param[1]: processor (type: AudioCallback)
-Function 606: DetachAudioMixedProcessor() (1 input parameters)
+Function 610: DetachAudioMixedProcessor() (1 input parameters)
   Name: DetachAudioMixedProcessor
   Return type: void
   Description: Detach audio stream processor from the entire audio pipeline
