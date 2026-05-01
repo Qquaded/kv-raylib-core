@@ -341,6 +341,12 @@ return {
       type = "UNKNOWN",
       value = "GetScreenToWorldRay",
       description = "Compatibility hack for previous raylib versions"
+    },
+    {
+      name = "NewVideo",
+      type = "UNKNOWN",
+      value = "LoadVideo",
+      description = ""
     }
   },
   structs = {
@@ -1200,6 +1206,47 @@ return {
           type = "unsigned int",
           name = "frameCount",
           description = "Total number of frames (considering channels)"
+        }
+      }
+    },
+    {
+      name = "Video",
+      description = "Video, handles playing video files",
+      fields = {
+        {
+          type = "void *",
+          name = "ctx",
+          description = "Format context (plm_t)"
+        },
+        {
+          type = "Texture2D",
+          name = "texture",
+          description = "Output texture for rendering"
+        },
+        {
+          type = "int",
+          name = "width",
+          description = "Video width"
+        },
+        {
+          type = "int",
+          name = "height",
+          description = "Video height"
+        },
+        {
+          type = "double",
+          name = "frameRate",
+          description = "Video frame rate"
+        },
+        {
+          type = "bool",
+          name = "playing",
+          description = "Is video playing"
+        },
+        {
+          type = "bool",
+          name = "ready",
+          description = "Is video ready to be played"
         }
       }
     },
@@ -8007,6 +8054,46 @@ return {
         {type = "Vector3", name = "p2"},
         {type = "Vector3", name = "p3"},
         {type = "Vector3", name = "p4"}
+      }
+    },
+    {
+      name = "LoadVideo",
+      description = "Load video stream from file",
+      returnType = "Video",
+      params = {
+        {type = "const char *", name = "fileName"}
+      }
+    },
+    {
+      name = "UnloadVideo",
+      description = "Unload video stream",
+      returnType = "void",
+      params = {
+        {type = "Video", name = "video"}
+      }
+    },
+    {
+      name = "PlayVideo",
+      description = "Start video playing",
+      returnType = "void",
+      params = {
+        {type = "Video *", name = "video"}
+      }
+    },
+    {
+      name = "UpdateVideo",
+      description = "Updates video frame to texture",
+      returnType = "void",
+      params = {
+        {type = "Video *", name = "video"}
+      }
+    },
+    {
+      name = "StopVideo",
+      description = "Stop video playing",
+      returnType = "void",
+      params = {
+        {type = "Video *", name = "video"}
       }
     },
     {
