@@ -227,42 +227,13 @@ if (${PLATFORM} MATCHES "Desktop")
 endif ()
 
 # Font rendering (TTF/OTF) requires FreeType for rasterization and HarfBuzz for shaping.
-# On Linux/macOS these are normally installed via the system package manager; on Windows
-# they're not, so we fall back to FetchContent to build them from source automatically.
-# Users can force FetchContent with -DRAYLIB_FETCH_FONT_DEPS=ON.
-option(RAYLIB_FETCH_FONT_DEPS "Always build FreeType and HarfBuzz from source via FetchContent" OFF)
+# We bundle them into the raylib DLL to avoid external dependencies.
+option(RAYLIB_FETCH_FONT_DEPS "Always build FreeType and HarfBuzz from source via FetchContent" ON)
 
 if (SUPPORT_FILEFORMAT_TTF)
-    set(_raylib_fetch_freetype ${RAYLIB_FETCH_FONT_DEPS})
-    set(_raylib_fetch_harfbuzz ${RAYLIB_FETCH_FONT_DEPS})
-
-    # --- FreeType: prefer system install, fall back to FetchContent ---
-    if (NOT _raylib_fetch_freetype)
-        find_package(Freetype QUIET)
-        if (NOT Freetype_FOUND)
-            message(STATUS "raylib: Freetype not found via find_package, will build from source via FetchContent")
-            set(_raylib_fetch_freetype TRUE)
-        endif ()
-    endif ()
-
-    # --- HarfBuzz: try pkg-config, then CMake config (vcpkg), then FetchContent ---
-    if (NOT _raylib_fetch_harfbuzz)
-        set(HARFBUZZ_FOUND FALSE)
-        find_package(PkgConfig QUIET)
-        if (PkgConfig_FOUND)
-            pkg_check_modules(HARFBUZZ QUIET IMPORTED_TARGET harfbuzz)
-        endif ()
-        if (NOT HARFBUZZ_FOUND)
-            find_package(harfbuzz QUIET CONFIG)
-            if (TARGET harfbuzz::harfbuzz)
-                set(HARFBUZZ_FOUND TRUE)
-            endif ()
-        endif ()
-        if (NOT HARFBUZZ_FOUND)
-            message(STATUS "raylib: HarfBuzz not found via pkg-config or find_package, will build from source via FetchContent")
-            set(_raylib_fetch_harfbuzz TRUE)
-        endif ()
-    endif ()
+    # Always use FetchContent to bundle freetype and harfbuzz into raylib
+    set(_raylib_fetch_freetype TRUE)
+    set(_raylib_fetch_harfbuzz TRUE)
 
     if (_raylib_fetch_freetype OR _raylib_fetch_harfbuzz)
         include(FetchContent)
@@ -275,11 +246,16 @@ if (SUPPORT_FILEFORMAT_TTF)
         set(FT_DISABLE_PNG ON CACHE BOOL "" FORCE)
         set(FT_DISABLE_HARFBUZZ ON CACHE BOOL "" FORCE)  # Avoid circular dep (FT optional auto-hinting)
         set(FT_DISABLE_BROTLI ON CACHE BOOL "" FORCE)
+        # Save current BUILD_SHARED_LIBS and set to OFF for freetype only
+        set(_raylib_saved_build_shared_libs ${BUILD_SHARED_LIBS})
+        set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
         FetchContent_Declare(freetype
             GIT_REPOSITORY https://gitlab.freedesktop.org/freetype/freetype.git
             GIT_TAG VER-2-13-3
             GIT_SHALLOW TRUE)
         FetchContent_MakeAvailable(freetype)
+        # Restore BUILD_SHARED_LIBS
+        set(BUILD_SHARED_LIBS ${_raylib_saved_build_shared_libs} CACHE BOOL "" FORCE)
         if (NOT TARGET Freetype::Freetype)
             add_library(Freetype::Freetype ALIAS freetype)
         endif ()
@@ -299,33 +275,40 @@ if (SUPPORT_FILEFORMAT_TTF)
         set(HB_HAVE_GDI OFF CACHE BOOL "" FORCE)
         set(HB_HAVE_UNISCRIBE OFF CACHE BOOL "" FORCE)
         set(HB_HAVE_DIRECTWRITE OFF CACHE BOOL "" FORCE)
+        # Save current BUILD_SHARED_LIBS and set to OFF for harfbuzz only
+        set(_raylib_saved_build_shared_libs ${BUILD_SHARED_LIBS})
+        set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
         FetchContent_Declare(harfbuzz
             GIT_REPOSITORY https://github.com/harfbuzz/harfbuzz.git
             GIT_TAG 10.4.0
             GIT_SHALLOW TRUE)
         FetchContent_MakeAvailable(harfbuzz)
+        # Restore BUILD_SHARED_LIBS
+        set(BUILD_SHARED_LIBS ${_raylib_saved_build_shared_libs} CACHE BOOL "" FORCE)
     endif ()
 
-    # Link FreeType (via imported target if present, otherwise classic vars)
+    # Link FreeType and HarfBuzz
+    # For shared library builds, we'll bundle them using whole-archive linker flags
+    # This is set up later in src/CMakeLists.txt where we have access to the raylib target
     if (TARGET Freetype::Freetype)
         set(LIBS_PRIVATE ${LIBS_PRIVATE} Freetype::Freetype)
+        set(FREETYPE_TARGET Freetype::Freetype)
     else ()
         include_directories(${FREETYPE_INCLUDE_DIRS})
         set(LIBS_PRIVATE ${LIBS_PRIVATE} ${FREETYPE_LIBRARIES})
     endif ()
 
-    # Link HarfBuzz (config package, pkg-config, or in-tree FetchContent target)
     if (TARGET harfbuzz::harfbuzz)
         set(LIBS_PRIVATE ${LIBS_PRIVATE} harfbuzz::harfbuzz)
+        set(HARFBUZZ_TARGET harfbuzz::harfbuzz)
     elseif (TARGET PkgConfig::HARFBUZZ)
         set(LIBS_PRIVATE ${LIBS_PRIVATE} PkgConfig::HARFBUZZ)
     elseif (TARGET harfbuzz)
         set(LIBS_PRIVATE ${LIBS_PRIVATE} harfbuzz)
+        set(HARFBUZZ_TARGET harfbuzz)
     endif ()
 
-    # Only surface a find_dependency() call in raylib-config.cmake when FreeType came from
-    # the system; when built in-tree there's nothing for downstream to find.
-    if (NOT _raylib_fetch_freetype)
-        set(RAYLIB_DEPENDENCIES "${RAYLIB_DEPENDENCIES}\nfind_dependency(Freetype)")
-    endif ()
+    # Don't surface find_dependency() calls since we bundle everything
+    set(_raylib_fetch_freetype ${_raylib_fetch_freetype} PARENT_SCOPE)
+    set(_raylib_fetch_harfbuzz ${_raylib_fetch_harfbuzz} PARENT_SCOPE)
 endif ()

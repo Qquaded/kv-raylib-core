@@ -99,6 +99,22 @@ endif ()
 target_link_libraries(raylib PRIVATE $<BUILD_INTERFACE:${LIBS_PRIVATE}>)
 target_link_libraries(raylib PUBLIC ${LIBS_PUBLIC})
 
+# Bundle freetype and harfbuzz into the shared library
+# For MSVC, static libraries linked privately are automatically bundled into the DLL
+# For GCC/Clang, use whole-archive to ensure all symbols are included
+if (BUILD_SHARED_LIBS AND SUPPORT_FILEFORMAT_TTF)
+    if (DEFINED FREETYPE_TARGET)
+        if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+            target_link_options(raylib PRIVATE "-Wl,--whole-archive" ${FREETYPE_TARGET} "-Wl,--no-whole-archive")
+        endif()
+    endif()
+    if (DEFINED HARFBUZZ_TARGET)
+        if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+            target_link_options(raylib PRIVATE "-Wl,--whole-archive" ${HARFBUZZ_TARGET} "-Wl,--no-whole-archive")
+        endif()
+    endif()
+endif()
+
 # Sets some compile time definitions for the pre-processor
 # If CUSTOMIZE_BUILD option is on you will not use config.h by default
 # and you will be able to select more build options
