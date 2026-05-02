@@ -224,6 +224,9 @@
 #ifndef SUPPORT_FILEFORMAT_PNG
     #define SUPPORT_FILEFORMAT_PNG      1
 #endif
+#ifndef SUPPORT_FILEFORMAT_SVG
+    #define SUPPORT_FILEFORMAT_SVG      1
+#endif
 #ifndef SUPPORT_FILEFORMAT_BMP
     // NOTE: BMP support required for clipboard images on Windows
     #define SUPPORT_FILEFORMAT_BMP      1

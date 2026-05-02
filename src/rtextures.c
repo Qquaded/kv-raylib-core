@@ -191,6 +191,10 @@
 
 #endif
 
+#if SUPPORT_FILEFORMAT_SVG
+    #include "external/resvg.h"             // Required for: SVG loading
+#endif
+
 #if SUPPORT_IMAGE_EXPORT
     #define STBIW_MALLOC RL_MALLOC
     #define STBIW_FREE RL_FREE
@@ -473,6 +477,34 @@ Image LoadImageFromMemory(const char *fileType, const unsigned char *fileData, i
         }
 #endif
     }
+#if SUPPORT_FILEFORMAT_SVG
+    else if ((strcmp(fileType, ".svg") == 0) || (strcmp(fileType, ".SVG") == 0))
+    {
+        resvg_options *opt = resvg_options_create();
+        resvg_render_tree *tree = NULL;
+        int err = resvg_parse_tree_from_data((const char *)fileData, (uintptr_t)dataSize, opt, &tree);
+
+        if (err == RESVG_OK)
+        {
+            resvg_size size = resvg_get_image_size(tree);
+            image.width = (int)size.width;
+            image.height = (int)size.height;
+            image.format = PIXELFORMAT_UNCOMPRESSED_R8G8B8A8;
+            image.mipmaps = 1;
+
+            image.data = RL_MALLOC(image.width * image.height * 4);
+            resvg_render(tree, resvg_transform_identity(), image.width, image.height, (char *)image.data);
+
+            resvg_tree_destroy(tree);
+        }
+        else
+        {
+            TRACELOG(LOG_WARNING, "IMAGE: Failed to load SVG data");
+        }
+
+        resvg_options_destroy(opt);
+    }
+#endif
 #if SUPPORT_FILEFORMAT_HDR
     else if ((strcmp(fileType, ".hdr") == 0) || (strcmp(fileType, ".HDR") == 0))
     {

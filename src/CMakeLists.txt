@@ -99,6 +99,15 @@ endif ()
 target_link_libraries(raylib PRIVATE $<BUILD_INTERFACE:${LIBS_PRIVATE}>)
 target_link_libraries(raylib PUBLIC ${LIBS_PUBLIC})
 
+target_link_libraries(raylib PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/external/libresvg.a)
+
+# Bundle resvg into the shared library
+if (BUILD_SHARED_LIBS)
+    if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+        target_link_options(raylib PRIVATE "-Wl,--whole-archive" ${CMAKE_CURRENT_SOURCE_DIR}/external/libresvg.a "-Wl,--no-whole-archive")
+    endif()
+endif()
+
 # Bundle freetype and harfbuzz into the shared library
 # For MSVC, static libraries linked privately are automatically bundled into the DLL
 # For GCC/Clang, use whole-archive to ensure all symbols are included
