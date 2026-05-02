@@ -99,12 +99,24 @@ endif ()
 target_link_libraries(raylib PRIVATE $<BUILD_INTERFACE:${LIBS_PRIVATE}>)
 target_link_libraries(raylib PUBLIC ${LIBS_PUBLIC})
 
-target_link_libraries(raylib PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/external/libresvg.a)
 
-# Bundle resvg into the shared library
-if (BUILD_SHARED_LIBS)
-    if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
-        target_link_options(raylib PRIVATE "-Wl,--whole-archive" ${CMAKE_CURRENT_SOURCE_DIR}/external/libresvg.a "-Wl,--no-whole-archive")
+
+option(SUPPORT_FILEFORMAT_SVG "Support SVG format (using resvg)" OFF)
+if (SUPPORT_FILEFORMAT_SVG)
+    target_compile_definitions(raylib PRIVATE SUPPORT_FILEFORMAT_SVG=1)
+
+    # Check if libresvg.a exists in external directory
+    if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/external/libresvg.a")
+        target_link_libraries(raylib PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/external/libresvg.a)
+
+        # Bundle resvg into the shared library
+        if (BUILD_SHARED_LIBS)
+            if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+                target_link_options(raylib PRIVATE "-Wl,--whole-archive" ${CMAKE_CURRENT_SOURCE_DIR}/external/libresvg.a "-Wl,--no-whole-archive")
+            endif()
+        endif()
+    else()
+        message(WARNING "SUPPORT_FILEFORMAT_SVG is enabled, but src/external/libresvg.a was not found. Please compile it using cargo and place it there, or download a pre-built binary.")
     endif()
 endif()
 
