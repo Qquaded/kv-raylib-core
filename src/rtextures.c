@@ -492,7 +492,7 @@ Image LoadImageFromMemory(const char *fileType, const unsigned char *fileData, i
             image.format = PIXELFORMAT_UNCOMPRESSED_R8G8B8A8;
             image.mipmaps = 1;
 
-            image.data = RL_MALLOC(image.width * image.height * 4);
+            image.data = RL_CALLOC(image.width * image.height * 4, 1);
             resvg_render(tree, resvg_transform_identity(), image.width, image.height, (char *)image.data);
 
             resvg_tree_destroy(tree);
