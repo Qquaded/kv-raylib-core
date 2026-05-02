@@ -1417,17 +1417,17 @@ void DrawRectangleRoundedLinesPro(Rectangle rec, float roundness, int segments, 
         float cosrot = cosf(rotation*DEG2RAD);
 
         Vector2 p[4] = {
-            { -origin.x, -origin.y },
-            { rec.width - origin.x, -origin.y },
-            { rec.width - origin.x, rec.height - origin.y },
-            { -origin.x, rec.height - origin.y }
+            { rec.x - origin.x, rec.y - origin.y },
+            { rec.x - origin.x + rec.width, rec.y - origin.y },
+            { rec.x - origin.x + rec.width, rec.y - origin.y + rec.height },
+            { rec.x - origin.x, rec.y - origin.y + rec.height }
         };
 
         for (int i=0; i<4; i++) {
             float x = p[i].x;
             float y = p[i].y;
-            p[i].x = rec.x + x*cosrot - y*sinrot;
-            p[i].y = rec.y + x*sinrot + y*cosrot;
+            p[i].x = rec.x + origin.x + x*cosrot - y*sinrot;
+            p[i].y = rec.y + origin.y + x*sinrot + y*cosrot;
         }
 
         DrawLineEx(p[0], p[1], lineThick, color);
