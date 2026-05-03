@@ -489,34 +489,49 @@ Image LoadImageFromMemory(const char *fileType, const unsigned char *fileData, i
             resvg_size size = resvg_get_image_size(tree);
             image.width = (int)size.width;
             image.height = (int)size.height;
-            image.format = PIXELFORMAT_UNCOMPRESSED_R8G8B8A8;
-            image.mipmaps = 1;
 
-            image.data = RL_MALLOC(image.width * image.height * 4);
-            resvg_render(tree, resvg_transform_identity(), image.width, image.height, (char *)image.data);
-
-            // Reverse premultiply alpha
-            unsigned char *pixels = (unsigned char *)image.data;
-            for (int i = 0; i < image.width * image.height; i++)
+            if (image.width > 0 && image.height > 0 && image.width <= 16384 && image.height <= 16384)
             {
-                unsigned char alpha = pixels[i * 4 + 3];
-                if (alpha == 0)
+                size_t bufSize = (size_t)image.width * (size_t)image.height * 4;
+                if (bufSize / 4 / image.width == image.height)
                 {
-                    pixels[i * 4 + 0] = 0;
-                    pixels[i * 4 + 1] = 0;
-                    pixels[i * 4 + 2] = 0;
+                    image.format = PIXELFORMAT_UNCOMPRESSED_R8G8B8A8;
+                    image.mipmaps = 1;
+
+                    image.data = RL_CALLOC(image.width * image.height, 4);
+
+                    if (image.data != NULL)
+                    {
+                        resvg_render(tree, resvg_transform_identity(), image.width, image.height, (char *)image.data);
+
+                        // Reverse premultiply alpha
+                        unsigned char *pixels = (unsigned char *)image.data;
+                        for (int i = 0; i < image.width * image.height; i++)
+                        {
+                            unsigned char alpha = pixels[i * 4 + 3];
+                            if (alpha == 0)
+                            {
+                                pixels[i * 4 + 0] = 0;
+                                pixels[i * 4 + 1] = 0;
+                                pixels[i * 4 + 2] = 0;
+                            }
+                            else if (alpha < 255)
+                            {
+                                float a = (float)alpha / 255.0f;
+                                float r = (float)pixels[i * 4 + 0] / a;
+                                float g = (float)pixels[i * 4 + 1] / a;
+                                float b = (float)pixels[i * 4 + 2] / a;
+                                pixels[i * 4 + 0] = (unsigned char)(r > 255.0f ? 255.0f : r);
+                                pixels[i * 4 + 1] = (unsigned char)(g > 255.0f ? 255.0f : g);
+                                pixels[i * 4 + 2] = (unsigned char)(b > 255.0f ? 255.0f : b);
+                            }
+                        }
+                    }
+                    else TRACELOG(LOG_WARNING, "IMAGE: Failed to allocate memory for SVG data");
                 }
-                else if (alpha < 255)
-                {
-                    float a = (float)alpha / 255.0f;
-                    float r = (float)pixels[i * 4 + 0] / a;
-                    float g = (float)pixels[i * 4 + 1] / a;
-                    float b = (float)pixels[i * 4 + 2] / a;
-                    pixels[i * 4 + 0] = (unsigned char)(r > 255.0f ? 255.0f : r);
-                    pixels[i * 4 + 1] = (unsigned char)(g > 255.0f ? 255.0f : g);
-                    pixels[i * 4 + 2] = (unsigned char)(b > 255.0f ? 255.0f : b);
-                }
+                else TRACELOG(LOG_WARNING, "IMAGE: SVG dimensions are too large, resulting in overflow");
             }
+            else TRACELOG(LOG_WARNING, "IMAGE: Invalid SVG dimensions");
 
             resvg_tree_destroy(tree);
         }
