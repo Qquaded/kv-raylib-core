@@ -5140,6 +5140,33 @@ return {
       }
     },
     {
+      name = "DrawRectangleRoundedPro",
+      description = "Draw rectangle with rounded edges and pro parameters",
+      returnType = "void",
+      params = {
+        {type = "Rectangle", name = "rec"},
+        {type = "float", name = "roundness"},
+        {type = "int", name = "segments"},
+        {type = "Vector2", name = "origin"},
+        {type = "float", name = "rotation"},
+        {type = "Color", name = "color"}
+      }
+    },
+    {
+      name = "DrawRectangleRoundedLinesPro",
+      description = "Draw rectangle lines with rounded edges and pro parameters",
+      returnType = "void",
+      params = {
+        {type = "Rectangle", name = "rec"},
+        {type = "float", name = "roundness"},
+        {type = "int", name = "segments"},
+        {type = "Vector2", name = "origin"},
+        {type = "float", name = "rotation"},
+        {type = "float", name = "lineThick"},
+        {type = "Color", name = "color"}
+      }
+    },
+    {
       name = "DrawTriangle",
       description = "Draw a color-filled triangle (vertex in counter-clockwise order!)",
       returnType = "void",
@@ -5215,6 +5242,32 @@ return {
         {type = "float", name = "radius"},
         {type = "float", name = "rotation"},
         {type = "float", name = "lineThick"},
+        {type = "Color", name = "color"}
+      }
+    },
+    {
+      name = "DrawStar",
+      description = "Draw a star shape",
+      returnType = "void",
+      params = {
+        {type = "Vector2", name = "center"},
+        {type = "int", name = "points"},
+        {type = "float", name = "innerRadius"},
+        {type = "float", name = "outerRadius"},
+        {type = "float", name = "rotation"},
+        {type = "Color", name = "color"}
+      }
+    },
+    {
+      name = "DrawStarLines",
+      description = "Draw a star shape outline",
+      returnType = "void",
+      params = {
+        {type = "Vector2", name = "center"},
+        {type = "int", name = "points"},
+        {type = "float", name = "innerRadius"},
+        {type = "float", name = "outerRadius"},
+        {type = "float", name = "rotation"},
         {type = "Color", name = "color"}
       }
     },

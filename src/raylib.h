@@ -1304,6 +1304,8 @@ RLAPI void DrawRectangleLinesEx(Rectangle rec, float lineThick, Color color);   
 RLAPI void DrawRectangleRounded(Rectangle rec, float roundness, int segments, Color color);              // Draw rectangle with rounded edges
 RLAPI void DrawRectangleRoundedLines(Rectangle rec, float roundness, int segments, Color color);         // Draw rectangle lines with rounded edges
 RLAPI void DrawRectangleRoundedLinesEx(Rectangle rec, float roundness, int segments, float lineThick, Color color); // Draw rectangle with rounded edges outline
+RLAPI void DrawRectangleRoundedPro(Rectangle rec, float roundness, int segments, Vector2 origin, float rotation, Color color); // Draw rectangle with rounded edges and pro parameters
+RLAPI void DrawRectangleRoundedLinesPro(Rectangle rec, float roundness, int segments, Vector2 origin, float rotation, float lineThick, Color color); // Draw rectangle lines with rounded edges and pro parameters
 RLAPI void DrawTriangle(Vector2 v1, Vector2 v2, Vector2 v3, Color color);                                // Draw a color-filled triangle (vertex in counter-clockwise order!)
 RLAPI void DrawTriangleLines(Vector2 v1, Vector2 v2, Vector2 v3, Color color);                           // Draw triangle outline (vertex in counter-clockwise order!)
 RLAPI void DrawTriangleFan(const Vector2 *points, int pointCount, Color color);                          // Draw a triangle fan defined by points (first vertex is the center)
@@ -1311,6 +1313,14 @@ RLAPI void DrawTriangleStrip(const Vector2 *points, int pointCount, Color color)
 RLAPI void DrawPoly(Vector2 center, int sides, float radius, float rotation, Color color);               // Draw a regular polygon (Vector version)
 RLAPI void DrawPolyLines(Vector2 center, int sides, float radius, float rotation, Color color);          // Draw a polygon outline of n sides
 RLAPI void DrawPolyLinesEx(Vector2 center, int sides, float radius, float rotation, float lineThick, Color color); // Draw a polygon outline of n sides with extended parameters
+
+// Basic shapes: Freeform drawing functions
+// Note: DrawPoly functions above are here
+
+RLAPI void DrawStar(Vector2 center, int points, float innerRadius, float outerRadius, float rotation, Color color); // Draw a star shape
+RLAPI void DrawStarLines(Vector2 center, int points, float innerRadius, float outerRadius, float rotation, Color color); // Draw a star shape outline
+
+// Basic shapes: Splines drawing functions
 
 // Splines drawing functions
 RLAPI void DrawSplineLinear(const Vector2 *points, int pointCount, float thick, Color color);            // Draw spline: Linear, minimum 2 points
