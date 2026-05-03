@@ -682,7 +682,7 @@
             <Param type="unsigned int" name="frames" desc="" />
         </Callback>
     </Callbacks>
-    <Functions count="606">
+    <Functions count="610">
         <Function name="InitWindow" retType="void" paramCount="3" desc="Initialize window and OpenGL context">
             <Param type="int" name="width" desc="" />
             <Param type="int" name="height" desc="" />
@@ -1567,6 +1567,23 @@
             <Param type="float" name="lineThick" desc="" />
             <Param type="Color" name="color" desc="" />
         </Function>
+        <Function name="DrawRectangleRoundedPro" retType="void" paramCount="6" desc="Draw rectangle with rounded edges and pro parameters">
+            <Param type="Rectangle" name="rec" desc="" />
+            <Param type="float" name="roundness" desc="" />
+            <Param type="int" name="segments" desc="" />
+            <Param type="Vector2" name="origin" desc="" />
+            <Param type="float" name="rotation" desc="" />
+            <Param type="Color" name="color" desc="" />
+        </Function>
+        <Function name="DrawRectangleRoundedLinesPro" retType="void" paramCount="7" desc="Draw rectangle lines with rounded edges and pro parameters">
+            <Param type="Rectangle" name="rec" desc="" />
+            <Param type="float" name="roundness" desc="" />
+            <Param type="int" name="segments" desc="" />
+            <Param type="Vector2" name="origin" desc="" />
+            <Param type="float" name="rotation" desc="" />
+            <Param type="float" name="lineThick" desc="" />
+            <Param type="Color" name="color" desc="" />
+        </Function>
         <Function name="DrawTriangle" retType="void" paramCount="4" desc="Draw a color-filled triangle (vertex in counter-clockwise order!)">
             <Param type="Vector2" name="v1" desc="" />
             <Param type="Vector2" name="v2" desc="" />
@@ -1609,6 +1626,22 @@
             <Param type="float" name="radius" desc="" />
             <Param type="float" name="rotation" desc="" />
             <Param type="float" name="lineThick" desc="" />
+            <Param type="Color" name="color" desc="" />
+        </Function>
+        <Function name="DrawStar" retType="void" paramCount="6" desc="Draw a star shape">
+            <Param type="Vector2" name="center" desc="" />
+            <Param type="int" name="points" desc="" />
+            <Param type="float" name="innerRadius" desc="" />
+            <Param type="float" name="outerRadius" desc="" />
+            <Param type="float" name="rotation" desc="" />
+            <Param type="Color" name="color" desc="" />
+        </Function>
+        <Function name="DrawStarLines" retType="void" paramCount="6" desc="Draw a star shape outline">
+            <Param type="Vector2" name="center" desc="" />
+            <Param type="int" name="points" desc="" />
+            <Param type="float" name="innerRadius" desc="" />
+            <Param type="float" name="outerRadius" desc="" />
+            <Param type="float" name="rotation" desc="" />
             <Param type="Color" name="color" desc="" />
         </Function>
         <Function name="DrawSplineLinear" retType="void" paramCount="4" desc="Draw spline: Linear, minimum 2 points">

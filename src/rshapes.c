@@ -1254,26 +1254,47 @@ void DrawRectangleRoundedPro(Rectangle rec, float roundness, int segments, Vecto
         {
             float angle = angles[k];
             Vector2 center = centers[k];
-            for (int i = 0; i < segments; i++)
+
+            // NOTE: Every QUAD actually represents two segments
+            for (int i = 0; i < segments/2; i++)
             {
                 rlColor4ub(color.r, color.g, color.b, color.a);
 
-                float angle1 = angle + rotation;
-                float angle2 = angle + stepLength + rotation;
+                float angleRot = angle + rotation;
 
                 rlTexCoord2f(shapeRect.x/texShapes.width, shapeRect.y/texShapes.height);
                 rlVertex2f(center.x, center.y);
 
-                rlTexCoord2f(shapeRect.x/texShapes.width, (shapeRect.y + shapeRect.height)/texShapes.height);
-                rlVertex2f(center.x + cosf(DEG2RAD*angle1)*radius, center.y + sinf(DEG2RAD*angle1)*radius);
+                rlTexCoord2f((shapeRect.x + shapeRect.width)/texShapes.width, shapeRect.y/texShapes.height);
+                rlVertex2f(center.x + cosf(DEG2RAD*(angleRot + stepLength*2.0f))*radius, center.y + sinf(DEG2RAD*(angleRot + stepLength*2.0f))*radius);
 
                 rlTexCoord2f((shapeRect.x + shapeRect.width)/texShapes.width, (shapeRect.y + shapeRect.height)/texShapes.height);
-                rlVertex2f(center.x + cosf(DEG2RAD*angle2)*radius, center.y + sinf(DEG2RAD*angle2)*radius);
+                rlVertex2f(center.x + cosf(DEG2RAD*(angleRot + stepLength))*radius, center.y + sinf(DEG2RAD*(angleRot + stepLength))*radius);
+
+                rlTexCoord2f(shapeRect.x/texShapes.width, (shapeRect.y + shapeRect.height)/texShapes.height);
+                rlVertex2f(center.x + cosf(DEG2RAD*angleRot)*radius, center.y + sinf(DEG2RAD*angleRot)*radius);
+
+                angle += (stepLength*2.0f);
+            }
+
+            // NOTE: In case number of segments is odd, adding one last piece to the cake
+            if (segments%2)
+            {
+                rlColor4ub(color.r, color.g, color.b, color.a);
+
+                float angleRot = angle + rotation;
+
+                rlTexCoord2f(shapeRect.x/texShapes.width, shapeRect.y/texShapes.height);
+                rlVertex2f(center.x, center.y);
+
+                rlTexCoord2f((shapeRect.x + shapeRect.width)/texShapes.width, (shapeRect.y + shapeRect.height)/texShapes.height);
+                rlVertex2f(center.x + cosf(DEG2RAD*(angleRot + stepLength))*radius, center.y + sinf(DEG2RAD*(angleRot + stepLength))*radius);
+
+                rlTexCoord2f(shapeRect.x/texShapes.width, (shapeRect.y + shapeRect.height)/texShapes.height);
+                rlVertex2f(center.x + cosf(DEG2RAD*angleRot)*radius, center.y + sinf(DEG2RAD*angleRot)*radius);
 
                 rlTexCoord2f((shapeRect.x + shapeRect.width)/texShapes.width, shapeRect.y/texShapes.height);
-                rlVertex2f(center.x + cosf(DEG2RAD*angle2)*radius, center.y + sinf(DEG2RAD*angle2)*radius);
-
-                angle += stepLength;
+                rlVertex2f(center.x, center.y);
             }
         }
 
@@ -1417,17 +1438,17 @@ void DrawRectangleRoundedLinesPro(Rectangle rec, float roundness, int segments, 
         float cosrot = cosf(rotation*DEG2RAD);
 
         Vector2 p[4] = {
-            { rec.x - origin.x, rec.y - origin.y },
-            { rec.x - origin.x + rec.width, rec.y - origin.y },
-            { rec.x - origin.x + rec.width, rec.y - origin.y + rec.height },
-            { rec.x - origin.x, rec.y - origin.y + rec.height }
+            { -origin.x, -origin.y },
+            { rec.width - origin.x, -origin.y },
+            { rec.width - origin.x, rec.height - origin.y },
+            { -origin.x, rec.height - origin.y }
         };
 
         for (int i=0; i<4; i++) {
             float x = p[i].x;
             float y = p[i].y;
-            p[i].x = rec.x + origin.x + x*cosrot - y*sinrot;
-            p[i].y = rec.y + origin.y + x*sinrot + y*cosrot;
+            p[i].x = rec.x + x*cosrot - y*sinrot;
+            p[i].y = rec.y + x*sinrot + y*cosrot;
         }
 
         DrawLineEx(p[0], p[1], lineThick, color);
@@ -1719,7 +1740,25 @@ void DrawRectangleRoundedLinesEx(Rectangle rec, float roundness, int segments, f
             {
                 float angle = angles[k];
                 const Vector2 center = centers[k];
-                for (int i = 0; i < segments; i++)
+                for (int i = 0; i < segments/2; i++)
+                {
+                    rlColor4ub(color.r, color.g, color.b, color.a);
+
+                    rlTexCoord2f(shapeRect.x/texShapes.width, shapeRect.y/texShapes.height);
+                    rlVertex2f(center.x + cosf(DEG2RAD*angle)*innerRadius, center.y + sinf(DEG2RAD*angle)*innerRadius);
+
+                    rlTexCoord2f((shapeRect.x + shapeRect.width)/texShapes.width, shapeRect.y/texShapes.height);
+                    rlVertex2f(center.x + cosf(DEG2RAD*(angle + stepLength*2.0f))*innerRadius, center.y + sinf(DEG2RAD*(angle + stepLength*2.0f))*innerRadius);
+
+                    rlTexCoord2f((shapeRect.x + shapeRect.width)/texShapes.width, (shapeRect.y + shapeRect.height)/texShapes.height);
+                    rlVertex2f(center.x + cosf(DEG2RAD*(angle + stepLength*2.0f))*outerRadius, center.y + sinf(DEG2RAD*(angle + stepLength*2.0f))*outerRadius);
+
+                    rlTexCoord2f(shapeRect.x/texShapes.width, (shapeRect.y + shapeRect.height)/texShapes.height);
+                    rlVertex2f(center.x + cosf(DEG2RAD*angle)*outerRadius, center.y + sinf(DEG2RAD*angle)*outerRadius);
+
+                    angle += stepLength*2.0f;
+                }
+                if (segments%2)
                 {
                     rlColor4ub(color.r, color.g, color.b, color.a);
 
@@ -1734,8 +1773,6 @@ void DrawRectangleRoundedLinesEx(Rectangle rec, float roundness, int segments, f
 
                     rlTexCoord2f(shapeRect.x/texShapes.width, (shapeRect.y + shapeRect.height)/texShapes.height);
                     rlVertex2f(center.x + cosf(DEG2RAD*angle)*outerRadius, center.y + sinf(DEG2RAD*angle)*outerRadius);
-
-                    angle += stepLength;
                 }
             }
 
