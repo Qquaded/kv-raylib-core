@@ -33,6 +33,7 @@ Video LoadVideo(const char *fileName)
     UnloadImage(img);
 
     video.ctx = plm;
+    plm_set_audio_enabled(plm, FALSE);  // Disable audio decoding to prevent unbounded buffer growth
     video.ready = true;
     video.playing = false;
 
