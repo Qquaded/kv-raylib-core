@@ -36,6 +36,7 @@ set(raylib_sources
     rshapes.c
     rtext.c
     rtextures.c
+    rvideo.c
     )
 
 # <root>/cmake/GlfwImport.cmake handles the details around the inclusion of glfw

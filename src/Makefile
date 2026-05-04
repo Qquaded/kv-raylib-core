@@ -748,7 +748,8 @@ LDLIBS  += $(FREETYPE_LIBS) $(HARFBUZZ_LIBS)
 OBJS = rcore.o \
        rshapes.o \
        rtextures.o \
-       rtext.o
+       rtext.o \
+       rvideo.o
 
 ifeq ($(TARGET_PLATFORM),PLATFORM_DESKTOP_GLFW)
     ifeq ($(USE_EXTERNAL_GLFW),FALSE)
@@ -878,6 +879,10 @@ rtextures.o : rtextures.c raylib.h rlgl.h
 
 # Compile text module
 rtext.o : rtext.c raylib.h
+	$(CC) -c $< $(CFLAGS) $(INCLUDE_PATHS)
+
+# Compile video module
+rvideo.o : rvideo.c raylib.h rlgl.h
 	$(CC) -c $< $(CFLAGS) $(INCLUDE_PATHS)
 
 # Compile models module
