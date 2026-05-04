@@ -495,10 +495,13 @@ Image LoadImageFromMemory(const char *fileType, const unsigned char *fileData, i
                 size_t bufSize = (size_t)image.width * (size_t)image.height * 4;
                 if (bufSize / 4 / image.width == image.height)
                 {
-                    image.format = PIXELFORMAT_UNCOMPRESSED_R8G8B8A8;
-                    image.mipmaps = 1;
-
                     image.data = RL_CALLOC(image.width * image.height, 4);
+
+                    if (image.data != NULL)
+                    {
+                        image.format = PIXELFORMAT_UNCOMPRESSED_R8G8B8A8;
+                        image.mipmaps = 1;
+
 
                     if (image.data != NULL)
                     {
